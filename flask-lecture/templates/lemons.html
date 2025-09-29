@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/styles/lemonstyle.css">
+    <title>Lemons</title>
+</head>
+<body>
+    <h1>Lemons in flask</h1>
+    {% if lemon_bool %}
+    <h3>The boolean is {{lemon_bool}} so we show the first item in the list (all in CAPS)</h3>
+    <h2>{{animals[0] | upper}}</h2>
+    <img src="../static/images/silly.jpg">
+    {% else %}
+    <h3>The boolean is {{lemon_bool}} so we show all the items in the list - as a list</h3>
+    <img src="../static/images/lemons.jpg">
+    <ul>
+        {% for animal in animals %}
+        <li>{{animal}}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

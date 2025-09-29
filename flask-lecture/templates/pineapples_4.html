@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pineapples again in flask and control flow</title>
+</head>
+
+<body>
+    {% if userLoggedIn %}
+    <h1> user is logged in! </h1>
+
+    {% else %}
+
+    <h1>pineapples again in flask number four</h1>
+    <h2>{{a_num_list}}</h2>
+    <ul>
+        <!-- JINJA syntax for loop-->
+        {% for singleEl in a_num_list %}
+        <!-- output the item-->
+        <li style="color:rgb(216, 122, 216)">{{singleEl}}</li>
+        <!-- close the for loop-->
+        {% endfor %}
+    </ul>
+    <ul>
+        <!-- JINJA syntax for loop-->
+        {% for singleCol in color_list %}
+        <!-- output the item-->
+        <li style="color:rgb(216, 122, 216)">{{singleCol}}</li>
+        <!-- close the for loop-->
+        {% endfor %}
+    </ul>
+    <!-- JINJA syntax if -->
+    {% if "yellow" in color_list %}
+    <p>Found YELLOW in the list!</p>
+    {% else %}
+    <p> YELLOW is not in the list!</p>
+    <!-- close the if-->
+    {% endif %}
+    <!-- close the outer if-->
+    {% endif %}
+</body>
+
+</html>
