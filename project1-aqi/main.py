@@ -1,6 +1,7 @@
 import os
 import requests
 import readchar
+import json
 
 city = "Montreal"
 
@@ -10,7 +11,15 @@ current_channel = "news"
 with open("apikey.env") as f:
     api_key = f.read().strip()
 
+# get words from words.json
+with open("words.json") as f:
+    words = json.load(f)
+    first_names = words["first_names"]
+    last_names = words["last_names"]
+    adjectives = words["adjectives"]
+    occupations = words["occupations"]
 
+    
 def get_terminal_width():
     try:
         return os.get_terminal_size().columns
