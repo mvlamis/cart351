@@ -61,7 +61,7 @@ def main_tv(): # will be looped constantly to fill terminal
     terminal_width = get_terminal_width()
     print("=" * terminal_width)
     print(get_channels_display())
-    print(aqiData)
+
     
     if current_channel == "news":
         news()

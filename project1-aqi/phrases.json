@@ -1,0 +1,143 @@
+{
+    "terrible": {
+        "news": {
+            "tickers": [
+                "Gas mask industry booming",
+                "Millions sign up for rocketship trips to Mars",
+                "Protests move to Zoom meetings",
+                "Time machines recalled due to safety concerns",
+                "Man eaten by AI-generated sandwich",
+                "The end is near",
+                "New Delhi is old news"
+            ],
+            "anchor_lines": [
+                "Good morning {city}, I'm {first_name} {last_name}, your {adjective} {occupation}, bringing you the latest news.",
+                "In today's top story, the air quality index in {city} has reached {aqi}, which is considered {adjective}.",
+                "Experts are advising residents to stay indoors and wear masks.",
+                "Schools and businesses are closing as the situation worsens.",
+                "Stay tuned for more updates on this {adjective} story."
+            ]
+        },
+        "opinion": {
+            "lines": []
+        },
+        "sports": {
+            "lines": []
+        },
+        "weather": {
+            "lines": []
+        }
+    },
+    "bad": {
+        "news": {
+            "tickers": [
+                "Local bakery introduces new oxygen-free bread",
+                "City council debates banning fresh air",
+                "New iPhone comes with built-in air purifier",
+                "Skincare brand launches pollution-proof serum",
+                "5G towers blamed for bad air days",
+                "Scientists develop airless bubble wrap"
+            ],
+            "anchor_lines": [
+                "Hello {city}, I'm {first_name} {last_name}, your {occupation}, with today's news.",
+                "How is your {adjective} day going? The air quality index in {city} is currently {aqi}, which is considered {adjective}.",
+                "My {adjective} dog refuses to go outside these days.",
+                "Many residents are finding creative ways to cope with the {adjective} air.",
+                "We'll keep you updated on this {adjective} situation."
+            ]
+        },
+        "opinion": {
+            "lines": []
+        },
+        "sports": {
+            "lines": []
+        },
+        "weather": {
+            "lines": []
+        }
+    },
+    "okay": {
+        "news": {
+            "tickers": [
+                "News ticker writers strike for better headlines",
+                "Stock market extremely average today, economists confused",
+                "Local author debuts new book titled 'Not great, not terrible'",
+                "New study finds people prefer lukewarm coffee",
+                "Conspiracy theorists take day off",
+                "Scientists discover new shade of beige"
+            ],
+            "anchor_lines": [
+                "And that's what I told her! I mean, fourteen years of marriage and this is the thanks I get?",
+                "We're on air?",
+                "G-good morning {city}, I'm {first_name} {last_name}, your {occupation}, bringing you the latest news.",
+                "The air quality index in {city} is currently {aqi}, which is considered {adjective}.",
+                "Is this even news? My {adjective} cat seems unconcerned.",
+                "I was going to be a real journalist, you know.",
+                "More news at eleven."
+            ]
+        },
+        "opinion": {
+            "lines": []
+        },
+        "sports": {
+            "lines": []
+        },
+        "weather": {
+            "lines": []
+        }
+    },
+    "good": {
+        "news": {
+            "tickers": [
+                "Local bakery introduces new oxygenated bread",
+                "Green space increases happiness, study finds",
+                "We might not be doomed after all",
+                "New app helps you find the freshest air",
+                "Scientists discover tree that produces WiFi",
+                "World Health Organization rebrands to World Happiness Organization"
+            ],
+            "anchor_lines": [
+                "Good morning {city}, I'm {first_name} {last_name}, your {occupation}, bringing you the latest news.",
+                "In today's top story, the air quality index in {city} has improved to {aqi}, which is considered {adjective}.",
+                "Residents are celebrating the return of fresh air and clear skies.",
+                "Outdoor activities and events are resuming as the situation improves.",
+                "Stay tuned for more updates on this {adjective} story."
+            ]
+        },
+        "opinion": {
+            "lines": []
+        },
+        "sports": {
+            "lines": []
+        },
+        "weather": {
+            "lines": []
+        }
+    },
+    "great": {
+        "news": {
+            "tickers": [
+                "Asthma Corp. announces mass layoffs",
+                "New study shows correlation between clean air and happiness",
+                "Lung donors no longer deceased",
+                "Lorax breathes sigh of relief",
+                "Trees demand better working conditions",
+                "News ticker writers request time off to enjoy fresh air"
+            ],
+            "anchor_lines": [
+                "Good morning {city}, I'm {first_name} {last_name}, your {occupation}, bringing you the latest news.",
+                "In today's top story, the air quality index in {city} has reached {aqi}, which is considered {adjective}.",
+                "Turn off the TV and go outside, {city}!"
+            ]
+        },
+        "opinion": {
+            "lines": []
+        },
+        "sports": {
+            "lines": []
+        },
+        "weather": {
+            "lines": []
+        }
+    }
+}
