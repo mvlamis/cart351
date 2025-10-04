@@ -3,8 +3,8 @@ import sys
 import time
 import json
 import select
-import requests
 import random
+import requests
 
 city = "Montreal"
 current_channel = "news"
@@ -72,9 +72,9 @@ def get_channels_display():
 
 def news():
     global ticker_offset
-
     terminal_width = get_terminal_width()
 
+    # Face animation (alternate every 5 ticks)
     face_closed = [
         "  _____  ",
         " /     \\ ",
@@ -97,7 +97,7 @@ def news():
     else:
         face = face_closed
 
-    news.face_lines = [line.center(terminal_width) for line in face]
+    face_lines = [line.center(terminal_width) for line in face]
 
     # cycle through anchor lines in order
     anchor_templates = phrases[aqiCategory]["news"]["anchor_lines"]
@@ -105,10 +105,7 @@ def news():
         news.anchor_index = 0
     if not hasattr(news, "anchor_tick"):
         news.anchor_tick = 0
-
-    # only update anchor line every 30 ticks
     if ticker_offset % 30 == 0:
-        # use last anchor line after reaching the end
         idx = min(news.anchor_index, len(anchor_templates) - 1)
         template = anchor_templates[idx]
         anchor_line = template.format(
@@ -123,6 +120,7 @@ def news():
         if news.anchor_index < len(anchor_templates) - 1:
             news.anchor_index += 1
         news.anchor_tick = ticker_offset
+
     # news ticker logic
     tickers = phrases[aqiCategory]["news"]["tickers"]
     ticker_text = "     ".join(tickers) + "     "
@@ -133,13 +131,56 @@ def news():
         visible = ticker_text[start:end]
     else:
         visible = ticker_text[start:] + ticker_text[:end - len(ticker_text)]
-    # store for later printing at bottom
-    news.ticker_line = "=" * terminal_width
-    news.ticker_text = visible[:terminal_width]
+    ticker_line = "=" * terminal_width
+    ticker_display = visible[:terminal_width]
+
+    for line in face_lines:
+        print(line)
+    print()
+    print(news.anchor_line.center(terminal_width))
+    print(ticker_line)
+    print(ticker_display)
+    print(ticker_line)
+    time.sleep(0.15)
     ticker_offset += 1
 
 def opinion():
-    print("You are watching the opinion channel.")
+    terminal_width = get_terminal_width()
+    # cycle through opinion lines in order, stop at last
+    opinion_lines = phrases[aqiCategory]["opinion"]["lines"]
+    if not hasattr(opinion, "line_index"):
+        opinion.line_index = 0
+    if not hasattr(opinion, "line_tick"):
+        opinion.line_tick = 0
+    if not hasattr(opinion, "tick_counter"):
+        opinion.tick_counter = 0
+    opinion.tick_counter += 1
+    if opinion.tick_counter % 100 == 1:
+        idx = min(opinion.line_index, len(opinion_lines) - 1)
+        template = opinion_lines[idx]
+        # pick speaker for this line
+        opinion.speaker_first = random.choice(first_names)
+        opinion.speaker_last = random.choice(last_names)
+        opinion.speaker_occupation = random.choice(occupations)
+        opinion.current_line = template.format(
+            city=city,
+            adjective=random.choice(adjectives),
+            aqi=aqiData
+        )
+        if opinion.line_index < len(opinion_lines) - 1:
+            opinion.line_index += 1
+        opinion.line_tick = opinion.tick_counter
+
+    # intro
+    print(f"We went out to the streets of {city} to get some opinions on the air quality.".center(terminal_width))
+    print("Here's what they had to say:".center(terminal_width))
+    print()
+
+    # main content
+    quote = f'“{opinion.current_line}”'
+    speaker = f'- {opinion.speaker_first} {opinion.speaker_last}, {opinion.speaker_occupation}'
+    print(quote.center(terminal_width))
+    print(speaker.center(terminal_width))
 
 def sports():
     print("You are watching the sports channel.")
@@ -160,60 +201,17 @@ def tv_loop():
         os.system('cls' if os.name == 'nt' else 'clear')
         print(get_channels_display().center(terminal_width))
         print("=" * terminal_width)
-        # print() 
 
-        anchor_printed = False
         if current_channel == "news":
             news()
-            # center the face + anchor line
-            terminal_height = get_terminal_height()
-            face_height = len(news.face_lines)
-            # lines used: 4 (header) + 2 (padding) + 1 (anchor) + face height
-            lines_used = 4 + 2 + 1 + face_height
-            vertical_space = max(terminal_height - lines_used, 0)
-            top_padding = vertical_space // 2
-            for _ in range(top_padding):
-                print()
-            for line in news.face_lines:
-                print(line)
-            print()
-            print(news.anchor_line.center(terminal_width))
-            anchor_printed = True
         elif current_channel == "opinion":
             opinion()
+            print("=" * terminal_width)
         elif current_channel == "sports":
             sports()
+            print("=" * terminal_width)
         elif current_channel == "weather":
             weather()
-
-        # calculate how many blank lines to print to push ticker to bottom
-        lines_used = 4
-        if current_channel == "news":
-            if anchor_printed:
-                terminal_height = get_terminal_height()
-                face_height = len(news.face_lines)
-                anchor_lines = 1
-                vertical_space = max(terminal_height - (4 + 2 + 1 + face_height), 0)
-                top_padding = vertical_space // 2
-                lines_used += top_padding + anchor_lines + face_height + 1
-        elif current_channel == "opinion":
-            lines_used += 0
-        elif current_channel == "sports":
-            lines_used += 0
-        elif current_channel == "weather":
-            lines_used += 0
-
-        terminal_height = get_terminal_height()
-        blank_lines = max(terminal_height - lines_used - 2, 0)
-        for _ in range(blank_lines):
-            print()
-
-        if current_channel == "news":
-            print(news.ticker_line)
-            print(news.ticker_text)
-            print(news.ticker_line)
-            time.sleep(0.15) 
-        else:
             print("=" * terminal_width)
 
         input_char = nonblocking_input()
