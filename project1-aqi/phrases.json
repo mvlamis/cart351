@@ -127,6 +127,8 @@
             "anchor_lines": [
                 "Good morning {city}, I'm {first_name} {last_name}, your {occupation}, bringing you the latest news.",
                 "In today's top story, the air quality index in {city} has reached {aqi}, which is considered {adjective}.",
+                "I'm happy to announce that I am quitting my job to go frolic in a meadow full time.",
+                "Huzzah for fresh air!",
                 "Turn off the TV and go outside, {city}!"
             ]
         },

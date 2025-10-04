@@ -4,6 +4,7 @@ import time
 import json
 import select
 import requests
+import random
 
 city = "Montreal"
 current_channel = "news"
@@ -47,6 +48,12 @@ def get_terminal_width():
     except OSError:
         return 80
 
+def get_terminal_height():
+    try:
+        return os.get_terminal_size().lines
+    except OSError:
+        return 24
+
 def get_channels_display():
     channels = {
         "news": "1 - News",
@@ -65,7 +72,57 @@ def get_channels_display():
 
 def news():
     global ticker_offset
+
     terminal_width = get_terminal_width()
+
+    face_closed = [
+        "  _____  ",
+        " /     \\ ",
+        "|  o o  |",
+        "|  ___  |",
+        "|       |",
+        " \\_____/ "
+    ]
+    face_open = [
+        "  _____  ",
+        " /     \\ ",
+        "|  o o  |",
+        "|  ___  |",
+        "|  \\_/  |",
+        " \\_____/ "
+    ]
+    # alternate every 5 ticks
+    if (ticker_offset // 5) % 2 == 0:
+        face = face_open
+    else:
+        face = face_closed
+
+    news.face_lines = [line.center(terminal_width) for line in face]
+
+    # cycle through anchor lines in order
+    anchor_templates = phrases[aqiCategory]["news"]["anchor_lines"]
+    if not hasattr(news, "anchor_index"):
+        news.anchor_index = 0
+    if not hasattr(news, "anchor_tick"):
+        news.anchor_tick = 0
+
+    # only update anchor line every 30 ticks
+    if ticker_offset % 30 == 0:
+        # use last anchor line after reaching the end
+        idx = min(news.anchor_index, len(anchor_templates) - 1)
+        template = anchor_templates[idx]
+        anchor_line = template.format(
+            city=city,
+            first_name=random.choice(first_names),
+            last_name=random.choice(last_names),
+            adjective=random.choice(adjectives),
+            occupation=random.choice(occupations),
+            aqi=aqiData
+        )
+        news.anchor_line = anchor_line[:terminal_width]
+        if news.anchor_index < len(anchor_templates) - 1:
+            news.anchor_index += 1
+        news.anchor_tick = ticker_offset
     # news ticker logic
     tickers = phrases[aqiCategory]["news"]["tickers"]
     ticker_text = "     ".join(tickers) + "     "
@@ -103,10 +160,25 @@ def tv_loop():
         os.system('cls' if os.name == 'nt' else 'clear')
         print(get_channels_display().center(terminal_width))
         print("=" * terminal_width)
-        print() 
+        # print() 
 
+        anchor_printed = False
         if current_channel == "news":
             news()
+            # center the face + anchor line
+            terminal_height = get_terminal_height()
+            face_height = len(news.face_lines)
+            # lines used: 4 (header) + 2 (padding) + 1 (anchor) + face height
+            lines_used = 4 + 2 + 1 + face_height
+            vertical_space = max(terminal_height - lines_used, 0)
+            top_padding = vertical_space // 2
+            for _ in range(top_padding):
+                print()
+            for line in news.face_lines:
+                print(line)
+            print()
+            print(news.anchor_line.center(terminal_width))
+            anchor_printed = True
         elif current_channel == "opinion":
             opinion()
         elif current_channel == "sports":
@@ -117,31 +189,32 @@ def tv_loop():
         # calculate how many blank lines to print to push ticker to bottom
         lines_used = 4
         if current_channel == "news":
-            lines_used += 0 
+            if anchor_printed:
+                terminal_height = get_terminal_height()
+                face_height = len(news.face_lines)
+                anchor_lines = 1
+                vertical_space = max(terminal_height - (4 + 2 + 1 + face_height), 0)
+                top_padding = vertical_space // 2
+                lines_used += top_padding + anchor_lines + face_height + 1
         elif current_channel == "opinion":
-            lines_used += 1
+            lines_used += 0
         elif current_channel == "sports":
-            lines_used += 1
+            lines_used += 0
         elif current_channel == "weather":
-            lines_used += 1
+            lines_used += 0
 
-        try:
-            terminal_height = os.get_terminal_size().lines
-        except OSError:
-            terminal_height = 24  # default
-
+        terminal_height = get_terminal_height()
         blank_lines = max(terminal_height - lines_used - 2, 0)
         for _ in range(blank_lines):
             print()
 
-        # Draw ticker at the bottom if on news channel
         if current_channel == "news":
             print(news.ticker_line)
             print(news.ticker_text)
-            time.sleep(0.04)
+            print(news.ticker_line)
+            time.sleep(0.15) 
         else:
             print("=" * terminal_width)
-            print("".ljust(terminal_width))
 
         input_char = nonblocking_input()
         if input_char == '1':
