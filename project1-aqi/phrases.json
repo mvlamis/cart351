@@ -19,7 +19,17 @@
             ]
         },
         "opinion": {
-            "lines": []
+            "lines": [
+                "I thought 2020 was bad.",
+                "Well, at least we don't have to worry about global warming anymore.",
+                "If you need me, I'll be in my bunker.",
+                "Hi Mom!!",
+                "Noah, get the ark.",
+                "I told you not to get the vaccine.",
+                "It's all coming together now.",
+                "My lungs are {adjective}.",
+                "Tell me how I'm supposed to breathe with no air?!"
+            ]
         },
         "sports": {
             "lines": []
@@ -47,7 +57,15 @@
             ]
         },
         "opinion": {
-            "lines": []
+            "lines": [
+                "It's an insult to my nose.",
+                "Bad air quality builds character.",
+                "{adjective} air, {adjective} life.",
+                "Whatever, I only breathe premium air anyway.",
+                "Make {city} {adjective} again.",
+                "Where's my gas mask?",
+                "Thanks, Obama."
+            ]
         },
         "sports": {
             "lines": []
@@ -77,7 +95,17 @@
             ]
         },
         "opinion": {
-            "lines": []
+            "lines": [
+                "And?",
+                "Slow news day, huh.",
+                "I've breathed worse.",
+                "How will this affect my commute?",
+                "I'm whelmed.",
+                "No comment.",
+                "I'm on TV!",
+                "So {adjective}.",
+                "Many such cases."
+            ]
         },
         "sports": {
             "lines": []
@@ -105,7 +133,16 @@
             ]
         },
         "opinion": {
-            "lines": []
+            "lines": [
+                "I love a good deep breath.",
+                "Smells like victory.",
+                "Excelsior!",
+                "Can't talk, breathing.",
+                "{city} feels almost civilized again when the air is this {adjective}.",
+                "I'm still side-eyeing that sky just in case.",
+                "Allergies? No where to be found. Coughing? I don't know her.",
+                "I think I'm becoming an outdoor person."
+            ]
         },
         "sports": {
             "lines": []
@@ -133,7 +170,17 @@
             ]
         },
         "opinion": {
-            "lines": []
+            "lines": [
+                "Alexa, play Breathin' by Ariana Grande.",
+                "I forgive 2020.",
+                "Life is worth living.",
+                "Is this Oxygen+? Oxygen Premium? Oxygen Pro Max?",
+                "Feeling: {adjective}.",
+                "This is the first time I've breathed in years.",
+                "My lungs are either applauding or trying to escape my body.",
+                "I think I can smell colors.",
+                "I am one with the air, and the air is one with me."
+            ]
         },
         "sports": {
             "lines": []
