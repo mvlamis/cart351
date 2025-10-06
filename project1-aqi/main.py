@@ -4,6 +4,7 @@ import time
 import json
 import select
 import random
+import textwrap
 import requests
 
 city = "Montreal"
@@ -116,7 +117,7 @@ def news():
             occupation=random.choice(occupations),
             aqi=aqiData
         )
-        news.anchor_line = anchor_line[:terminal_width]
+        news.anchor_line = anchor_line
         if news.anchor_index < len(anchor_templates) - 1:
             news.anchor_index += 1
         news.anchor_tick = ticker_offset
@@ -134,10 +135,13 @@ def news():
     ticker_line = "=" * terminal_width
     ticker_display = visible[:terminal_width]
 
+    # Print everything (vertically centered handled by main loop)
     for line in face_lines:
         print(line)
     print()
-    print(news.anchor_line.center(terminal_width))
+    # Wrap anchor text to terminal width and center each line
+    for wrapped_line in textwrap.wrap(news.anchor_line, width=terminal_width):
+        print(wrapped_line.center(terminal_width))
     print(ticker_line)
     print(ticker_display)
     print(ticker_line)
