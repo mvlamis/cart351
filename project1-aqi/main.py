@@ -10,6 +10,7 @@ import requests
 city = "Montreal"
 current_channel = "news"
 ticker_offset = 0
+AQI_override = "great"  # set to an AQI category string to override API data for testing
 
 # load API key and word lists
 with open("apikey.env") as f:
@@ -32,6 +33,8 @@ def get_AQI_data():
     return aqi
 
 def get_aqi_category(aqi):
+    if AQI_override in ["terrible", "bad", "okay", "good", "great"]:
+        return AQI_override
     if aqi >= 250:
         return "terrible"
     elif aqi >= 150:
@@ -187,7 +190,26 @@ def opinion():
     print(speaker.center(terminal_width))
 
 def sports():
-    print("You are watching the sports channel.")
+    terminal_width = get_terminal_width()
+
+    # get animation frames for current AQI category
+    frames_dict = phrases[aqiCategory].get("sports", {}).get("frames", {})
+    if not frames_dict:
+        print("No sports animation available.".center(terminal_width))
+        return
+    
+    # sort frame keys numerically
+    frame_keys = sorted(frames_dict.keys(), key=int)
+    if not hasattr(sports, "frame_index"):
+        sports.frame_index = 0
+
+    # advance frame every call
+    frame = frames_dict[frame_keys[sports.frame_index % len(frame_keys)]]
+    for line in frame:
+        print(line.center(terminal_width))
+    sports.frame_index = (sports.frame_index + 1) % len(frame_keys)
+    print(phrases[aqiCategory].get("sports", {}).get("caption", "").center(terminal_width))
+    time.sleep(0.15)
 
 def weather():
     print("You are watching the weather channel.")
@@ -210,13 +232,10 @@ def tv_loop():
             news()
         elif current_channel == "opinion":
             opinion()
-            print("=" * terminal_width)
         elif current_channel == "sports":
             sports()
-            print("=" * terminal_width)
         elif current_channel == "weather":
             weather()
-            print("=" * terminal_width)
 
         input_char = nonblocking_input()
         if input_char == '1':
