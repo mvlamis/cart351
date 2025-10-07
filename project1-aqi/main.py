@@ -11,7 +11,7 @@ import requests
 city = "Montreal"
 current_channel = "news"
 ticker_offset = 0
-AQI_override = "great"  # set to an AQI category string to override API data for testing
+AQI_override = None  # set to an AQI category string to override API data for testing
 
 # load API key and word lists
 with open("apikey.env") as f:
@@ -82,10 +82,41 @@ def get_channels_display():
             display_parts.append(label)
     return " | ".join(display_parts)
 
+def center_vertically(content_height):
+    terminal_height = get_terminal_height()
+    # account for the header (channel bar + separator line)
+    available_height = terminal_height - 2
+    padding = max(0, (available_height - content_height) // 2)
+    
+    for i in range(padding):
+        print()
+    
+    return padding
+
 def news():
     global ticker_offset
     terminal_width = get_terminal_width()
+    terminal_height = get_terminal_height()
 
+    face_height = 6  # face animation height
+    spacing = 2      # empty line after face, first ticker line
+    
+    # estimate anchor text height (will vary based on text wrapping)
+    if hasattr(news, "anchor_line"):
+        anchor_height = len(textwrap.wrap(news.anchor_line, width=terminal_width))
+    else:
+        anchor_height = 1
+    
+    # The ticker will be at the bottom, so don't include it in centered content
+    total_content_height = face_height + spacing + anchor_height
+    
+    # Print vertical padding - account for header (2 lines) and ticker (3 lines)
+    available_height = terminal_height - 2 - 3  # Header and ticker lines
+    padding_top = max(0, (available_height - total_content_height) // 2)
+    
+    for i in range(padding_top):
+        print()
+    
     # Face animation (alternate every 5 ticks)
     face_closed = [
         "  _____  ",
@@ -146,21 +177,43 @@ def news():
     ticker_line = "=" * terminal_width
     ticker_display = visible[:terminal_width]
 
-    # Print everything (vertically centered handled by main loop)
+    # Print face and anchor message
     for line in face_lines:
         print(line)
     print()
+    
     # Wrap anchor text to terminal width and center each line
     for wrapped_line in textwrap.wrap(news.anchor_line, width=terminal_width):
         print(wrapped_line.center(terminal_width))
+    
+    # calculate remaining space to fill before ticker at bottom
+    content_used = padding_top + face_height + spacing + anchor_height
+    remaining_lines = terminal_height - content_used - 2 - 2  # 2 for ticker, 2 for header
+    
+    # fill remaining space with empty lines
+    for i in range(remaining_lines):
+        print()
+    
     print(ticker_line)
     print(ticker_display)
-    print(ticker_line)
+    # print(ticker_line)
+    
     time.sleep(0.15)
     ticker_offset += 1
 
 def opinion():
     terminal_width = get_terminal_width()
+    
+    intro_height = 2
+    spacing = 1 # empty line after intro
+    quote_height = 1
+    speaker_height = 1
+    
+    total_height = intro_height + spacing + quote_height + speaker_height
+    
+    # Print vertical padding
+    center_vertically(total_height)
+    
     # cycle through opinion lines in order, stop at last
     opinion_lines = phrases[aqiCategory]["opinion"]["lines"]
     if not hasattr(opinion, "line_index"):
@@ -202,21 +255,29 @@ def sports():
 
     # get animation frames for current AQI category
     frames_dict = phrases[aqiCategory].get("sports", {}).get("frames", {})
-    if not frames_dict:
-        print("No sports animation available.".center(terminal_width))
-        return
     
     # sort frame keys numerically
     frame_keys = sorted(frames_dict.keys(), key=int)
     if not hasattr(sports, "frame_index"):
         sports.frame_index = 0
-
-    # advance frame every call
-    frame = frames_dict[frame_keys[sports.frame_index % len(frame_keys)]]
-    for line in frame:
+    
+    # get current frame to calculate height
+    current_frame = frames_dict[frame_keys[sports.frame_index % len(frame_keys)]]
+    caption = phrases[aqiCategory].get("sports", {}).get("caption", "")
+    
+    # calculate total content height
+    frame_height = len(current_frame)
+    caption_height = 1
+    total_height = frame_height + caption_height
+    
+    center_vertically(total_height)
+    
+    for line in current_frame:
         print(line.center(terminal_width))
+    
+    print(caption.center(terminal_width))
+    
     sports.frame_index = (sports.frame_index + 1) % len(frame_keys)
-    print(phrases[aqiCategory].get("sports", {}).get("caption", "").center(terminal_width))
     time.sleep(0.15)
 
 def weather():
@@ -245,11 +306,24 @@ def weather():
         if date_obj >= today:
             future_forecast.append(day)
     
+    forecast_days = 3
+
+    title_height = 1
+    title_spacing = 1
+    lines_per_day = 3 # Date + bar + blank line
+    forecast_height = forecast_days * lines_per_day
+    quote_spacing = 1
+    quote_height = 1
+    
+    total_height = title_height + title_spacing + forecast_height + quote_spacing + quote_height
+    
+    center_vertically(total_height)
+    
     print(f"Air Quality Forecast for {city}".center(terminal_width))
     print()
     
     # graph forecast data
-    for day in future_forecast[:3]:
+    for day in future_forecast[:forecast_days]:
         date = day.get('day', 'Unknown')
         min_aqi = day.get('min', 0)
         max_aqi = day.get('max', 0)
@@ -346,11 +420,23 @@ def tv_loop():
             break
         time.sleep(0.04)
 
+
 global aqiData
 global forecastData
 global aqiCategory
+
+# fetch data
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Loading air quality data for " + city + "...")
 aqiData = get_AQI_data()
+
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Loading forecast data...")
 forecastData = get_forecast_data()
+
+os.system('cls' if os.name == 'nt' else 'clear')
+print("Data loaded. Turning on TV...")
+time.sleep(2)
 
 aqiCategory = get_aqi_category(aqiData)
 
