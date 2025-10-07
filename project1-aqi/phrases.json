@@ -79,6 +79,15 @@
                     "╚═════════════════════╝"
                 ]
             }
+        },
+        "weather": {
+            "lines": [
+                "Breaking: Today's atmosphere is 80% pollutants, 20% air",
+                "Weather alert: Don't breathe today if possible",
+                "The sky is a lovely shade of industrial gray today in {city}",
+                "Tomorrow's forecast: More {adjective} pollution",
+                "Weather forecasters suggest evolving gills as a backup plan"
+            ]
         }
     },
     "bad": {
@@ -181,7 +190,13 @@
             }
         },
         "weather": {
-            "lines": []
+            "lines": [
+                "Today's special: Slightly used oxygen with notes of car exhaust",
+                "The air in {city} today is best described as 'crunchy'",
+                "Weather update: Visibility reduced to 'squinting required'",
+                "AQI {aqi}: Not great, not terrible, just {adjective}",
+                "Meteorologists recommend practicing breath-holding techniques"
+            ]
         }
     },
     "okay": {
@@ -273,7 +288,13 @@
             }
         },
         "weather": {
-            "lines": []
+            "lines": [
+                "Today's air quality: Perfectly mediocre",
+                "Weather report: You can probably breathe without coughing",
+                "The sky in {city} today is visible... mostly",
+                "AQI {aqi}: Your lungs will be fine, probably",
+                "Weather forecast: Meh with a chance of better tomorrow"
+            ]
         }
     },
     "good": {
@@ -356,7 +377,13 @@
             }
         },
         "weather": {
-            "lines": []
+            "lines": [
+                "Weather alert: Surprisingly breathable atmosphere detected in {city}",
+                "Today's forecast: Actually decent air quality, enjoy it while it lasts",
+                "Breaking: Local plants producing oxygen at impressive rates",
+                "AQI {aqi}: A {adjective} day to be outside",
+                "Weather report: Face masks optional today"
+            ]
         }
     },
     "great": {
@@ -455,6 +482,14 @@
                 ]
             }
         },
-        "weather": {}
+        "weather": {
+            "lines": [
+                "Weather report: Air so clean you can taste the photosynthesis",
+                "Breaking: Lungs across {city} singing with joy",
+                "Today's forecast: Breathe deeply and enjoy this {adjective} air",
+                "AQI {aqi}: Nature is showing off today",
+                "Weather update: Perfect day to fill your premium air jars"
+            ]
+        }
     }
 }

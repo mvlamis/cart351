@@ -5,6 +5,7 @@ import json
 import select
 import random
 import textwrap
+import datetime
 import requests
 
 city = "Montreal"
@@ -31,6 +32,13 @@ def get_AQI_data():
     data = response.json()
     aqi = data['data']['aqi']
     return aqi
+
+def get_forecast_data():
+    response = requests.get(f"https://api.waqi.info/feed/{city}/?token={api_key}")
+    data = response.json()
+    forecast = data['data'].get('forecast', {}).get('daily', {})
+    
+    return forecast  
 
 def get_aqi_category(aqi):
     if AQI_override in ["terrible", "bad", "okay", "good", "great"]:
@@ -212,7 +220,95 @@ def sports():
     time.sleep(0.15)
 
 def weather():
-    print("You are watching the weather channel.")
+    global ticker_offset
+    global forecastData
+
+    terminal_width = get_terminal_width()
+    
+    # get today's date for comparison
+    today = datetime.datetime.now().date()
+
+    forecast_types = ['pm25', 'pm10', 'o3']
+    aqi_forecast = []
+    
+    # try each forecast type until one has data
+    for forecast_type in forecast_types:
+        if forecast_type in forecastData and forecastData[forecast_type]:
+            aqi_forecast = forecastData[forecast_type]
+            break
+    
+    # filter forecast to only include today and future days
+    future_forecast = []
+    for day in aqi_forecast:
+        date = day.get('day', 'Unknown')
+        date_obj = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+        if date_obj >= today:
+            future_forecast.append(day)
+    
+    print(f"Air Quality Forecast for {city}".center(terminal_width))
+    print()
+    
+    # graph forecast data
+    for day in future_forecast[:3]:
+        date = day.get('day', 'Unknown')
+        min_aqi = day.get('min', 0)
+        max_aqi = day.get('max', 0)
+        avg_aqi = day.get('avg', 0)
+        
+        # format readable date
+        date_obj = datetime.datetime.strptime(date, "%Y-%m-%d")
+        formatted_date = date_obj.strftime("%a, %b %d")
+            
+        # determine AQI category and color
+        category = get_aqi_category(avg_aqi)
+        if category == "terrible":
+            color = "\033[91m"  # red
+        elif category == "bad":
+            color = "\033[93m"  # yellow
+        elif category == "okay":
+            color = "\033[95m"  # magenta
+        elif category == "good":
+            color = "\033[94m"  # blue
+        else:  # great
+            color = "\033[92m"  # green
+
+        reset = "\033[0m"
+        
+        # bar representation
+        bar_width = terminal_width - 20
+        bar_length = int(min(avg_aqi / 300 * bar_width, bar_width))
+        bar_char = "█" * bar_length
+        padding = " " * (bar_width - bar_length)
+        
+        print(f"{formatted_date}: {color}AQI {avg_aqi} ({category}){reset}".center(terminal_width))
+        print(f"[{color}{bar_char}{reset}{padding}] Min: {min_aqi}, Max: {max_aqi}".center(terminal_width))
+        print()
+    
+    weather_lines = phrases.get(aqiCategory, {}).get("weather", {}).get("lines", [])
+
+    if not hasattr(weather, "line_index"):
+        weather.line_index = 0
+    
+    if not hasattr(weather, "line_adjectives"):
+        weather.line_adjectives = {}
+     
+    if ticker_offset % 50 == 0:
+        weather.line_index = (weather.line_index + 1) % len(weather_lines)
+        # assign a new adjective only when changing to a new line
+        if str(weather.line_index) not in weather.line_adjectives:
+            weather.line_adjectives[str(weather.line_index)] = random.choice(adjectives)
+    
+    current_adjective = weather.line_adjectives.get(str(weather.line_index), random.choice(adjectives))
+        
+    weather_line = weather_lines[weather.line_index % len(weather_lines)]
+    print(weather_line.format(
+        city=city,
+        adjective=current_adjective,
+        aqi=aqiData
+    ).center(terminal_width))
+    
+    time.sleep(0.15)
+    ticker_offset += 1
 
 # non blocking input for constant screen refresh with input
 def nonblocking_input():
@@ -251,8 +347,11 @@ def tv_loop():
         time.sleep(0.04)
 
 global aqiData
+global forecastData
 global aqiCategory
 aqiData = get_AQI_data()
+forecastData = get_forecast_data()
+
 aqiCategory = get_aqi_category(aqiData)
 
 if os.name != 'nt': # if not windows, set terminal to cbreak mode
