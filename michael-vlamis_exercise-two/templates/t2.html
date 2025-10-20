@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>Order Perfectly Normal Donuts That Aren't Connected to Anything Nefarious</h3>
+        <form action="{{ url_for('thank_you_t2') }}" method="get">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="order-description">Order Description:</label>
+            <textarea id="order-description" name="order-description" rows="4" cols="50" required></textarea><br><br>
+            
+            <input type="submit" value="Submit">
+        </form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+     <h3>Welcome to Michael's {{ topic|capitalize }} Shop Without A More Creative Name!</h3>
+    <section>
+        <!-- stuff goes in here -->
+            <div class="inventory-count">
+                {% if num_donuts > 20 %}
+                Fully Stocked! We have {{ num_donuts }} {{ topic }} available!
+                {% elif num_donuts > 10 %}
+                Running low: {{ num_donuts }} {{ topic }} left!
+                {% else %}
+                Almost sold out! Only {{ num_donuts }} {{ topic }} remaining!
+                {% endif %}
+            </div>
+
+            <div class="donut-flavours">
+                <h4>Available Flavours:</h4>
+                <ul>
+                {% for flavour in donut_data.flavours %}
+                    <li>
+                        <h5>{{ flavour }}</h5>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            <div class="donut-toppings">
+                <h4>Topping Options:</h4>
+                <p style="font-style: italic; color: #666; font-size: 0.9em;">Images may or may not reflect actual toppings. Donut-haver discretion is advised.</p>
+                <ul>
+                {% for topping in donut_data.toppings %}
+                    <li>
+                        <h5>{{ topping }}</h5>
+                        <img src="{{ url_for('static', filename='images/' + topping + '.png') }}" width="100">
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+            <div class="ice-cream">
+                <h4>Ice Cream Options:</h4>
+                <ul>
+                {% for flavour in icecream_flavors %}
+                    <li>
+                        <h5>{{ flavour }}</h5>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
+
+    </section>
+{% endblock %}
