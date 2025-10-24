@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Data Visualizer</title>
+</head>
+<body>
+    <div>
+        <header>
+            <h1>Music Data Visualizer</h1>
+        </header>
+
+        <div class="card">
+            {% if not spotify_logged_in %}
+                Click below to connect and import your data
+
+                <div class="login-options">
+                    <a href="/login/spotify" class="login-btn spotify-btn">
+                        Connect Spotify
+                    </a>
+                </div>
+            {% else %}
+                {% if user_data %}
+                    <div class="user-info">
+                        <p>Hello, {{ user_data.profile.display_name or user_data.profile.id }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="login-options">
+                    <a href="/logout" class="login-btn logout-btn">
+                        Logout
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
