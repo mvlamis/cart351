@@ -21,6 +21,10 @@ SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize'
 SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token'
 SPOTIFY_API_BASE = 'https://api.spotify.com/v1'
 
+# Last.fm API Configuration
+LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
+LASTFM_API_BASE = 'http://ws.audioscrobbler.com/2.0/'
+
 # Data storage file
 DATA_FILE = 'data/user_data.json'
 
@@ -88,24 +92,59 @@ def exchange_spotify_code(code):
 
 def get_spotify_user_data(access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
-    
-    # Get user profile
     profile = requests.get(f'{SPOTIFY_API_BASE}/me', headers=headers).json()
-    
-    # Get top tracks
-    top_tracks = requests.get(f'{SPOTIFY_API_BASE}/me/top/tracks?time_range=short_term&limit=50', headers=headers).json()
-    
-    # Get top artists
-    top_artists = requests.get(f'{SPOTIFY_API_BASE}/me/top/artists?time_range=short_term&limit=50', headers=headers).json()
-    
-    # Get recently played
     recently_played = requests.get(f'{SPOTIFY_API_BASE}/me/player/recently-played?limit=50', headers=headers).json()
     
+    tracks = []
+    for item in recently_played.get('items', []):
+        track = item.get('track', {})
+        tracks.append({
+            'played_at': item.get('played_at'),
+            'track_id': track.get('id'),
+            'track_name': track.get('name'),
+            'artists': [artist.get('name') for artist in track.get('artists', [])],
+            'album': track.get('album', {}).get('name'),
+            'album_image': track.get('album', {}).get('images', [{}])[0].get('url')
+        })
     return {
         'profile': profile,
-        'top_tracks': top_tracks.get('items', []),
-        'top_artists': top_artists.get('items', []),
-        'recently_played': recently_played.get('items', [])
+        'recent_tracks': tracks
+    }
+
+
+def get_lastfm_user_data(username):
+    # Get user profile
+    profile_params = {
+        'method': 'user.getinfo',
+        'user': username,
+        'api_key': LASTFM_API_KEY,
+        'format': 'json'
+    }
+    profile_resp = requests.get(LASTFM_API_BASE, params=profile_params).json()
+    profile = profile_resp.get('user', {})
+
+    # Get recent tracks
+    tracks_params = {
+        'method': 'user.getrecenttracks',
+        'user': username,
+        'api_key': LASTFM_API_KEY,
+        'limit': 50,
+        'format': 'json'
+    }
+    tracks_resp = requests.get(LASTFM_API_BASE, params=tracks_params).json()
+    tracks = []
+    for item in tracks_resp.get('recenttracks', {}).get('track', []):
+        tracks.append({
+            'played_at': item.get('date', {}).get('uts'),  # unix timestamp
+            'track_id': item.get('mbid'),
+            'track_name': item.get('name'),
+            'artists': [item.get('artist', {}).get('#text')],
+            'album': item.get('album', {}).get('#text'),
+            'album_image': item.get('image', [{}])[-1].get('#text') if item.get('image') else None
+        })
+    return {
+        'profile': profile,
+        'recent_tracks': tracks
     }
 
 
@@ -113,17 +152,19 @@ def get_spotify_user_data(access_token):
 @app.route('/')
 def index():
     spotify_logged_in = 'spotify_token' in session
-    
+    lastfm_logged_in = 'lastfm_username' in session
+
     user_data = None
-    if 'current_user_id' in session:
+    if 'current_user_id' in session and 'current_platform' in session:
         user_data_store = load_user_data()
         user_id = session['current_user_id']
         if user_id in user_data_store['users']:
             user_data = user_data_store['users'][user_id]
-    
-    return render_template('index.html', 
-                         spotify_logged_in=spotify_logged_in,
-                         user_data=user_data)
+
+    return render_template('index.html',
+                          spotify_logged_in=spotify_logged_in,
+                          lastfm_logged_in=lastfm_logged_in,
+                          user_data=user_data)
 
 
 @app.route('/login/spotify')
@@ -155,25 +196,55 @@ def callback_spotify():
     listening_data = get_spotify_user_data(token_data['access_token'])
     profile = listening_data['profile']
     user_id = profile.get('id', 'unknown')
-    
     user_data_store = load_user_data()
 
-    if user_id not in user_data_store['users']:
-        user_data_store['users'][user_id] = {
-            'platform': 'spotify',
-            'profile': profile,
-            'history': []
-        }
-    
-    user_data_store['users'][user_id]['history'].append({
-        'timestamp': datetime.now().isoformat(),
-        'data': listening_data
-    })
-    
+    # Store only the last 50 tracks played
+    user_data_store['users'][user_id] = {
+        'platform': 'spotify',
+        'profile': profile,
+        'recent_tracks': listening_data['recent_tracks'],
+        'last_updated': datetime.now().isoformat()
+    }
+
     save_user_data(user_data_store)
     session['current_user_id'] = user_id
     session['current_platform'] = 'spotify'
     
+    return redirect(url_for('index'))
+
+
+@app.route('/login/lastfm', methods=['GET', 'POST'])
+def login_lastfm():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        if not username:
+            return "Username required", 400
+        session['lastfm_username'] = username
+        return redirect(url_for('callback_lastfm'))
+    return render_template('lastfm_login.html')
+
+
+@app.route('/callback/lastfm')
+def callback_lastfm():
+    username = session.get('lastfm_username')
+    if not username:
+        return "No Last.fm username in session", 400
+
+    user_data_store = load_user_data()
+    lastfm_data = get_lastfm_user_data(username)
+    profile = lastfm_data['profile']
+    user_id = profile.get('name', username)
+
+    user_data_store['users'][user_id] = {
+        'platform': 'lastfm',
+        'profile': profile,
+        'recent_tracks': lastfm_data['recent_tracks'],
+        'last_updated': datetime.now().isoformat()
+    }
+
+    save_user_data(user_data_store)
+    session['current_user_id'] = user_id
+    session['current_platform'] = 'lastfm'
     return redirect(url_for('index'))
 
 

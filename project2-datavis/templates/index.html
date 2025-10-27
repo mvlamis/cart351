@@ -12,18 +12,30 @@
         </header>
 
         <div class="card">
-            {% if not spotify_logged_in %}
+            {% if not spotify_logged_in and not lastfm_logged_in %}
                 Click below to connect and import your data
 
                 <div class="login-options">
                     <a href="/login/spotify" class="login-btn spotify-btn">
                         Connect Spotify
                     </a>
+                    <form action="/login/lastfm" method="post" style="margin-top:1em;">
+                        <input type="text" name="username" placeholder="Last.fm Username" required>
+                        <button type="submit" class="login-btn lastfm-btn">Connect Last.fm</button>
+                    </form>
                 </div>
             {% else %}
                 {% if user_data %}
                     <div class="user-info">
-                        <p>Hello, {{ user_data.profile.display_name or user_data.profile.id }}</p>
+                        <p>
+                            Hello,
+                            {% if user_data.platform == 'spotify' %}
+                                {{ user_data.profile.display_name or user_data.profile.id }}
+                            {% elif user_data.platform == 'lastfm' %}
+                                {{ user_data.profile.name }}
+                            {% endif %}
+                        </p>
+                        <p>Platform: {{ user_data.platform|capitalize }}</p>
                     </div>
                 {% endif %}
 
