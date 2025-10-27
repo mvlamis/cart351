@@ -1,0 +1,22 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- <h1>Hi, {{ user.username }}!</h1> -->
+     <h1>Hi, {{user.username|capitalize}}</h1>
+    <section class = "flex-intro">
+    <div class="items">
+    {% for item in passedDictionary %}
+    
+        <p>The key is: <span class ="dict_key">{{item}}</span> and the value is: 
+        <span class ="dict_value">{{passedDictionary[item]}}</span>
+    </p>
+
+    {% endfor %}
+    </div>
+    <div class = "img_div">
+        <img src = {{imgPath}} />
+
+    </div>
+    </section>
+{% endblock %}

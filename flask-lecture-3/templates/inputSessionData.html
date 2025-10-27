@@ -1,0 +1,26 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+{% block content %}
+<h3>SAVE SESSION VARS</h3>
+<div class="sessionVars">
+    <!-- take out the form action etc..-->
+    <form id="sessionStore" method="GET" action="/saveSession">
+        {%if session['data_a']%}
+        <h3>LOAD SESSION VARS</h3>
+        <p> Data A: {{session['data_a']}}</p>
+        <p> Data B: {{session['data_b']}}</p>
+        <a href="{{url_for('modifySessionData')}}">go to modify page</a>
+        {% else %}
+        <p><label>DATA A:</label>
+            <input type="text" size="24" maxlength="40" name="data_a" required>
+        </p>
+        <p><label>DATA B:</label>
+            <input type="text" size="24" maxlength="40" name="data_b" required>
+        </p>
+        <p><label></label>
+            <input type="submit" name="submit" value="send" id=buttonS />
+        </p>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,39 @@
+
+
+<!doctype html>
+<html>
+    <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/base.css">
+
+    <!--new add a custom block for the script-->
+    {% block scriptblock %}
+    {% endblock %}
+
+    <title>CART 351 Flask Workshop Oct 27:)</title>
+
+    </head>
+    <body>
+        <header> 
+            <h2> CART 351 Flask Workshop Oct 27:) </h2>
+            <nav>
+                <ul>
+                    <li> <a href="{{url_for('index')}}">Home </a> </li>
+                    <li> <a href="{{url_for('addPlantData')}}">Add Plant</a> </li>
+                    <li> <a href="{{url_for('register')}}">Register</a> </li>
+                    <li> <a href="{{url_for('addPlantExtended')}}">Add Plant V2</a> </li>
+            
+                  
+                </ul>
+                </nav>
+        </header>
+        <main>
+        {% block content %}{% endblock %}
+        </main>
+        <footer>
+            footer info ** footer info **
+        </footer>
+    </body>
+</html>

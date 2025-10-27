@@ -1,0 +1,201 @@
+*{
+    margin:0;
+     padding:0;
+}
+
+body{
+    background:rgb(191, 246, 255);
+    font-family: "Roboto", sans-serif;
+   
+}
+
+h2{
+    font-size:32px;
+    padding-top:10px;
+    padding-bottom:10px;
+    padding-left:10px;
+     color: rgb(191, 246, 255);
+     margin-left:10px;
+     margin-right:10px;
+     margin-top:10px;
+    background-color: rgb(232, 178, 233);
+}
+nav ul{
+    display:flex;
+    justify-content:right;
+    background-color: rgb(217, 55, 220);
+    padding-top:10px;
+    padding-bottom:10px;
+    margin-left:10px;
+    margin-right:10px;
+  
+}
+nav ul li{
+    width:10%;
+    text-transform: uppercase;
+    text-decoration: none;
+    list-style-type: none;
+
+      
+}
+nav li a{
+text-decoration: none;
+color:rgb(191, 246, 255);
+}
+main{
+    margin: 10px;
+    margin-bottom:0;
+     background-color: rgb(229, 243, 245);
+     min-height:calc(90vh - 5vh - 100px);
+}
+
+footer{
+       background-color: rgb(217, 55, 220);
+       min-height:5vh;
+       margin-left: 10px;
+       margin-right: 10px;
+       padding:10px;
+       color: rgb(191, 246, 255);
+
+}
+.dict_key{
+    color: rgb(220, 94, 55);
+}
+
+.dict_value{
+    color: rgb(55, 116, 220);
+}
+main h1{
+padding:5px;
+   color: rgb(55, 116, 220);
+}
+.flex-intro{
+    display:flex;
+}
+.flex-intro .items{
+    margin:5px;
+    background-color: rgb(135, 230, 246);
+    width:40%;
+    padding:5px;
+    font-size:18px;
+    margin-left:5%;
+}
+.flex-intro .img_div{
+ width:50%;
+ padding:5px;
+}
+.img_div img{
+    width: 90%;
+}
+
+/**** new ***/
+.pineAppleParent{
+    padding-top: 10px;
+    background-color:rgb(4, 83, 67);
+    padding-bottom:10px;
+}
+.pineAppleParent h3{
+    font-size:24px;
+     color: rgb(5, 230, 204);
+     margin-left:10px;
+     margin-right:10px;
+     margin-top:10px;
+    background-color: rgb(6, 165, 133);
+
+}
+.pineAppleParent p{
+    color:white;
+    margin-top:20px;
+     margin-left:10px;
+     margin-right:10px;
+    margin-bottom:20px;
+}
+
+.pineAppleParent img{
+    width:90%;
+}
+
+.highlight{
+    background-color: rgb(217, 55, 220);
+    color:white;
+    padding-left: 10px; 
+    padding-right: 10px;
+}
+
+/*********** for the form input ***/
+.plant-collect{ padding-top: 10px;background-color:rgb(246, 227, 245);padding-bottom:10px;}
+label{display:inline-block; width:30%; margin-top:1%;text-transform: uppercase;}
+textarea{margin-top:10px;width:50%;margin-left:2%;}
+input{margin-left:2%;width:50%;}
+fieldset{width:75%;color:#302e2e;margin:0 auto;margin-top:2%;border:none;font-size:14px;text-transform: uppercase;}
+select{width:50%;}
+#submitPlant{width:auto;margin-top:10px;}
+.plant-collect h3{padding:5px;text-align: center; font-size:24px;color:rgb(191, 147, 189);}
+
+/*** thank you ***/
+/**** new ***/
+.thank-collect{
+    padding-top: 10px;
+    background-color:rgb(203, 218, 215);
+    padding-bottom:10px;
+}
+.thank-collect h3{
+    font-size:24px;
+     color: rgb(87, 77, 85);
+     margin-left:10px;
+     margin-right:10px;
+     margin-top:10px;
+    background-color: rgb(248, 249, 248);
+
+}
+/**404**/
+.four-oh-four{
+    padding-top: 10px;
+    background-color:rgb(203, 218, 215);
+    padding-bottom:10px;
+}
+.four-oh-four h3{
+    font-size:24px;
+     color: rgb(87, 77, 85);
+     margin-left:10px;
+     margin-right:10px;
+     margin-top:10px;
+    background-color: rgb(248, 249, 248);
+
+}
+
+/**** register ***/
+.register-collect{
+    padding-top: 10px;
+    background-color:rgb(203, 218, 215);
+    padding-bottom:10px;
+}
+
+.register-collect{ padding-top: 10px;background-color:rgb(246, 227, 245);padding-bottom:10px;}
+#submitRegister{width:auto;margin-top:10px;}
+.register-collect h3{padding:5px;text-align: center; font-size:24px;color:rgb(191, 147, 189);}
+
+/*** img plant **/
+
+.thank-collect .imgContainer{
+   background-color: rgb(232, 178, 233);
+    width:50%;
+    margin-top:10px;
+    margin-left:25%;
+}
+.thank-collect .imgContainer img{
+    display:inline-block;
+    width:70%;
+    margin-left:15%;
+}
+
+.sessionVars {
+    background: white;
+    width: 50%;
+    padding: 10px;
+}
+
+.sessionVars input[type=submit] {
+    width: 100px;
+    margin-top: 10px;
+}

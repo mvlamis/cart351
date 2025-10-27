@@ -1,0 +1,45 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+{% block content %}
+
+<!-- js for this page-->
+{% block scriptblock %}
+<script src="{{url_for('static',filename='js/registerPost.js')}}"></script>
+{% endblock %}
+
+<section class="register-collect">
+    <div class="formContainer">
+        <!--form done using more current tags... -->
+        <form id="insertRegForm" action="">
+            <!-- group the related elements in a form -->
+            <h3>WELCOME! PLEASE REGISTER BELOW </h3>
+            <fieldset>
+                <p>
+                    <label>Last Name:</label>
+                    <input type="text" size="24" maxlength="40" name="l_name" required>
+                </p>
+
+                <p>
+                    <label>First Name:</label>
+                    <input type="text" size="24" maxlength="40" name="f_name" required>
+                </p>
+                <p>
+                    <label>email:</label>
+                    <input type="email" size="24" maxlength="40" name="email_name" required>
+                </p>
+                <p>
+                    <label>Password:</label>
+                    <input type="password" size="24" maxlength="40" name="p_word" required>
+                </p>
+
+                <p>
+                    <label></label>
+                    <input id="submitRegister" type="submit" name="submit" value="submit my info" id=buttonS />
+                </p>
+            </fieldset>
+        </form>
+    </div>
+</section>
+<section class="thank-collect" id="reg_thank">
+</section>
+{% endblock %}

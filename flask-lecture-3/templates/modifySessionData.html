@@ -1,0 +1,39 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{%if session['data_a']%}
+<h3>A NEW PAGE WITH THE SESSION VARS</h3>
+<p> Data A: {{session['data_a']}}</p>
+<p> Data B: {{session['data_b']}}</p>
+
+<h4 style="margin-top:20px"> Modify session vars:</h4>
+<form method="get" action="/modifySession">
+    <div class="sessionVars">
+        <p><label>DATA A:</label>
+            <input type="text" size="24" maxlength="40" name="data_a" value={{session['data_a']}} required>
+        </p>
+        <p><label>DATA B:</label>
+            <input type="text" size="24" maxlength="40" name="data_b" value={{session['data_b']}} required>
+        </p>
+        <p><label></label>
+            <input type="submit" value="submit" />
+        </p>
+</form>
+<a href="{{url_for('inputSessionData')}}">back to input session vars</a>
+
+<div class="sessionVars" style="background: rgb(232, 178, 233);">
+    <h4> CLICK the button to DELETE session vars:</h4>
+    <form method="get" action="/deleteSession">
+        <input type="submit" value="submit" />
+    </form>
+</div>
+</div>
+
+{% else %}
+<h3>NO SESSION VARS </h3>
+<a href="{{url_for('inputSessionData')}}">back to input session vars</a>
+{% endif %}
+{% endblock %}

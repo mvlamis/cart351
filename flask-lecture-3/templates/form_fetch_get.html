@@ -1,0 +1,48 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+<!-- js for this page-->
+{% block scriptblock %}
+<script src="{{url_for('static',filename='js/script_get.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+<h3> PROCESS FORM WITH GET AND FETCH</h3>
+<section class="plant-collect">
+    <div class="formContainer">
+        <form id="insertPlantFormFetch">
+            <fieldset>
+                <p>
+                    <label>Owner Name:</label>
+                    <input type="text" size="24" maxlength="40" name="o_name" required>
+                </p>
+
+                <p>
+                    <label>Plant Name:</label>
+                    <input type="text" size="24" maxlength="40" name="a_name" required>
+                </p>
+                <p>
+                    <label>Geographic Location:</label>
+                    <input type="text" size="24" maxlength="40" name="a_geo_loc" required>
+                </p>
+                <p>
+                    <label>Birth Date (DD-MM-YYYY):</label>
+                    <input type="date" name="a_date" required>
+                </p>
+                <p>
+                    <label>Description:</label>
+                    <textarea type="text" rows="4" cols="50" name="a_descript" required></textarea>
+                </p>
+                <p>
+                    <label></label>
+                    <input id="submitPlant" type="submit" name="submit" value="submit my info" id=buttonS />
+                </p>
+            </fieldset>
+
+        </form>
+    </div>
+
+</section>
+<div id="results">
+    RESULTS
+</div>
+{% endblock %}

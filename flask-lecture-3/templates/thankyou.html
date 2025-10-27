@@ -1,0 +1,12 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+
+{% block content %}
+    <section class = "thank-collect">
+        {% if owner_name %}
+        <h3> Thank you <span class = "highlight">{{owner_name}}</span> for adding a new plant into the plant repo!</h3>
+        {% else %}
+              <h3><span class = "highlight">form arguments are no longer available</span></h3>
+        {%endif%}
+</section>
+{% endblock %}
