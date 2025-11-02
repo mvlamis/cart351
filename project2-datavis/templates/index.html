@@ -39,6 +39,32 @@
                     </div>
                 {% endif %}
 
+                {% if recent_tracks %}
+                    <section class="recent-tracks">
+                        <h2>Recently Played Songs</h2>
+                        <ul>
+                            {% for track in recent_tracks %}
+                                <li>
+                                    <strong>{{ track.trackTitle }}</strong>
+                                    <span> by {{ track.artists[0].name }}</span>
+                                    {% if track.audio_features %}
+                                        <div class="audio-features">
+                                            <p>Danceability: {{ track.audio_features.danceability }}</p>
+                                            <p>Energy: {{ track.audio_features.energy }}</p>
+                                            <p>Instrumentalness: {{ track.audio_features.instrumentalness }}</p>
+                                            <p>Liveness: {{ track.audio_features.liveness }}</p>
+                                            <p>Loudness: {{ track.audio_features.loudness }}</p>
+                                            <p>Speechiness: {{ track.audio_features.speechiness }}</p>
+                                            <p>Tempo: {{ track.audio_features.tempo }}</p>
+                                            <p>Valence: {{ track.audio_features.valence }}</p>
+                                        </div>
+                                    {% endif %}
+
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+
                 <div class="login-options">
                     <a href="/logout" class="login-btn logout-btn">
                         Logout

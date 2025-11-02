@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from flask import Flask, render_template, session, redirect, url_for, request
 import requests
 from dotenv import load_dotenv
@@ -24,6 +24,10 @@ SPOTIFY_API_BASE = 'https://api.spotify.com/v1'
 # Last.fm API Configuration
 LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
 LASTFM_API_BASE = 'http://ws.audioscrobbler.com/2.0/'
+
+# ReccoBeats API Configuration
+RECCOBEATS_API_TRACK = "https://api.reccobeats.com/v1/track?ids={track_id}"
+RECCOBEATS_API_AUDIO_FEATURES = "https://api.reccobeats.com/v1/track/{track_id}/audio-features"
 
 # Data storage file
 DATA_FILE = 'data/user_data.json'
@@ -93,13 +97,12 @@ def exchange_spotify_code(code):
 def get_spotify_user_data(access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
     profile = requests.get(f'{SPOTIFY_API_BASE}/me', headers=headers).json()
-    recently_played = requests.get(f'{SPOTIFY_API_BASE}/me/player/recently-played?limit=50', headers=headers).json()
+    recently_played = requests.get(f'{SPOTIFY_API_BASE}/me/player/recently-played?limit=40', headers=headers).json()
     
     tracks = []
     for item in recently_played.get('items', []):
         track = item.get('track', {})
         tracks.append({
-            'played_at': item.get('played_at'),
             'track_id': track.get('id'),
             'track_name': track.get('name'),
             'artists': [artist.get('name') for artist in track.get('artists', [])],
@@ -128,14 +131,13 @@ def get_lastfm_user_data(username):
         'method': 'user.getrecenttracks',
         'user': username,
         'api_key': LASTFM_API_KEY,
-        'limit': 50,
+        'limit': 40,
         'format': 'json'
     }
     tracks_resp = requests.get(LASTFM_API_BASE, params=tracks_params).json()
     tracks = []
     for item in tracks_resp.get('recenttracks', {}).get('track', []):
         tracks.append({
-            'played_at': item.get('date', {}).get('uts'),  # unix timestamp
             'track_id': item.get('mbid'),
             'track_name': item.get('name'),
             'artists': [item.get('artist', {}).get('#text')],
@@ -148,6 +150,32 @@ def get_lastfm_user_data(username):
     }
 
 
+def get_reccobeats_tracks(id_list):
+    track_string = ','.join(id_list)
+    url = RECCOBEATS_API_TRACK.format(track_id=track_string)
+    
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()
+
+def get_reccobeats_audio_features(id):
+    url = RECCOBEATS_API_AUDIO_FEATURES.format(track_id=id)
+    
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()
+
+
 # Routes
 @app.route('/')
 def index():
@@ -155,16 +183,29 @@ def index():
     lastfm_logged_in = 'lastfm_username' in session
 
     user_data = None
-    if 'current_user_id' in session and 'current_platform' in session:
-        user_data_store = load_user_data()
-        user_id = session['current_user_id']
-        if user_id in user_data_store['users']:
-            user_data = user_data_store['users'][user_id]
+    recent_tracks = []
+    # load user data from reccobeats
+    user_id = session.get('current_user_id')
+    platform = session.get('current_platform')
+    if user_id and platform:
+        all_user_data = load_user_data()
+        user_data = all_user_data['users'].get(user_id)
+        if user_data:
+            if platform == 'spotify':
+                recent_tracks = user_data.get('reccobeats_data', {}).get('content', [])
+                for track in recent_tracks:
+                    track['audio_features'] = track.get('audio_features', {})
+            elif platform == 'lastfm':
+                recent_tracks = user_data.get('recent_tracks', [])
 
-    return render_template('index.html',
-                          spotify_logged_in=spotify_logged_in,
-                          lastfm_logged_in=lastfm_logged_in,
-                          user_data=user_data)
+
+    return render_template(
+        'index.html',
+        spotify_logged_in=spotify_logged_in,
+        lastfm_logged_in=lastfm_logged_in,
+        user_data=user_data,
+        recent_tracks=recent_tracks
+    )
 
 
 @app.route('/login/spotify')
@@ -197,19 +238,27 @@ def callback_spotify():
     profile = listening_data['profile']
     user_id = profile.get('id', 'unknown')
     user_data_store = load_user_data()
+    
+    track_ids = [track['track_id'] for track in listening_data['recent_tracks'] if track.get('track_id')]
+    reccobeats_data = get_reccobeats_tracks(track_ids)
 
-    # Store only the last 50 tracks played
+    for track in reccobeats_data.get('content', []):
+        audio_features = get_reccobeats_audio_features(track['id'])
+        track['audio_features'] = audio_features
+    
+
     user_data_store['users'][user_id] = {
         'platform': 'spotify',
         'profile': profile,
-        'recent_tracks': listening_data['recent_tracks'],
+        'reccobeats_data': reccobeats_data,
         'last_updated': datetime.now().isoformat()
     }
 
     save_user_data(user_data_store)
     session['current_user_id'] = user_id
     session['current_platform'] = 'spotify'
-    
+
+
     return redirect(url_for('index'))
 
 
@@ -254,5 +303,5 @@ def logout():
     return redirect(url_for('index'))
 
 
-app.run(debug=True, port=5000)
+app.run(debug=True, port=5001)
 
