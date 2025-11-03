@@ -1,0 +1,73 @@
+body {
+  background: rgb(231, 89, 89);
+  font-family: "Roboto", sans-serif;
+}
+main {
+  min-height: 70vh;
+  background-color: rgb(251, 128, 128);
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+p {
+  padding: 2px;
+  width: 100%;
+}
+p label {
+  display: inline-block;
+  width: 30%;
+  color: rgb(198, 101, 101);
+  font-size: 16px;
+  background: rgba(255,255,255,0.5);
+}
+.wrapper {
+  width: 75%;
+  margin-left: 12%;
+}
+h2 {
+  color: white;
+}
+h3 {
+  text-align: center;
+  color: rgb(252, 242, 242);
+}
+input {
+  margin-left: 5px;
+  width: 65%;
+}
+input[type="submit"] {
+  width: 8%;
+}
+form {
+  padding: 10px;
+  background: rgb(250, 191, 191);
+  width: 60%;
+  margin: 0 auto;
+}
+#results{
+  padding:10px;
+  width: 60%;
+  margin: 0 auto;
+  margin-top:10px;
+  background-color:rgb(250, 191, 191);
+}
+
+/*********** for the form input ***/
+form.plant-collect{ padding-top: 10px;background-color:rgb(246, 227, 245);padding-bottom:10px;}
+.plant-collect label{display:inline-block; width:40%; margin-top:1%;text-transform: uppercase;}
+.plant-collect textarea{margin-top:10px;width:50%;margin-left:2%;}
+.plant-collect input{margin-left:2%;width:50%;}
+.plant-collect fieldset{color:#302e2e;margin:0 auto;margin-top:2%;border:none;font-size:14px;text-transform: uppercase;}
+.plant-collect select{width:50%;}
+.plant-collect #submitPlant{width:auto;margin-top:10px;}
+.plant-collect h3{padding:5px;text-align: center; font-size:24px;color:rgb(191, 147, 189);}
+
+/**** p5Container ***/
+#p5Container{
+ padding: 0;
+  margin: 0;
+  padding-bottom:50px;
+  display: grid; /* Set up the grid and justify/align to center */
+  justify-content: center;
+  align-content: center;
+}
