@@ -37,6 +37,8 @@
                         </p>
                         <p>Platform: {{ user_data.platform|capitalize }}</p>
                     </div>
+
+                    <a href="{{ url_for('visual') }}" class="login-btn">Open Visualizer</a>
                 {% endif %}
 
                 {% if recent_tracks %}

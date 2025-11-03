@@ -1,6 +1,6 @@
 import os
 import json
-from datetime import datetime, timezone
+from datetime import datetime
 from flask import Flask, render_template, session, redirect, url_for, request
 import requests
 from dotenv import load_dotenv
@@ -344,6 +344,22 @@ def callback_lastfm():
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+
+@app.route('/visual')
+def visual():
+    if not session.get('current_user_id'):
+        return redirect(url_for('index'))
+    all_user_data = load_user_data()
+    user_id = session['current_user_id']
+    user_data = all_user_data['users'].get(user_id)
+    listening_data = user_data.get('reccobeats_data', {}) if user_data else {}
+    return render_template(
+        'visual.html',
+        user_id=user_id,
+        platform=session['current_platform'],
+        listening_data=listening_data
+    )
 
 
 app.run(debug=True, port=5001)

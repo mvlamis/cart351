@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Visualizer</title>
+
+</head>
+<body>
+    <div id="visualization">
+        
+    </div>
+    <script>
+        var userId = "{{ user_id }}";
+        var platform = "{{ platform }}";
+        var listeningData = {{ listening_data.content|tojson }};
+    </script>
+    <script src="static/js/visual.js"></script>
+</body>
+</html>
