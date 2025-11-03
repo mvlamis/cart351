@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+    <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/base.css">
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.11.10/lib/p5.js"></script>
+    <title>CART 351 EX THREE</title>
+
+    </head>
+    <body>
+        <header> 
+            <h2> CART 351 EX THREE </h2>
+            <nav>
+                <ul>
+                    <li> <a href="{{url_for('index')}}">Home </a> </li>
+                    <li> <a href="{{url_for('t2')}}">Add Fireworks</a> </li>
+                    <li> <a href="{{url_for('allFireworks')}}">All Fireworks</a> </li>
+                </ul>
+                </nav>
+        </header>
+        <main>
+        {% block content %}{% endblock %}
+        </main>
+        <footer>
+            footer info ** footer info **
+        </footer>
+    </body>
+</html>

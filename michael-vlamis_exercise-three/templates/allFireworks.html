@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+   
+     <h3>All Fireworks</h3>
+    <section>
+         <div id="addFireworks">
+            <script>
+                let fireworksData = {{fireworks_data| tojson }};
+                    console.log(fireworksData);
+            </script>
+            <script src="../static/js/allFireworks.js"></script>
+         </div>
+
+    </section>
+{% endblock %}
