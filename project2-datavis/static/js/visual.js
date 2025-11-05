@@ -89,6 +89,77 @@ window.onload = function() {
         });
     });
 
+    // diagonal lines layer
+    const linesGroup = svg.append('g').attr('class', 'lines');
+
+    tracks.forEach((track, i) => {
+        const af = track.audio_features;
+        const numLines = Math.floor(af.tempo / 10);
+
+        d3.range(numLines).forEach(j => {
+            const lineProgress = j / numLines;
+            linesGroup.append('line')
+                .attr('x1', width * lineProgress)
+                .attr('y1', 0)
+                .attr('x2', width * (1 - lineProgress * af.acousticness))
+                .attr('y2', height)
+                .attr('stroke', `hsla(${(af.instrumentalness + lineProgress) * 360}, ${af.energy * 100}%, 50%, ${af.valence * 0.15})`)
+                .attr('stroke-width', af.speechiness * 8 + 1);
+        });
+    });
+
+    // particle dots layer
+    const particlesGroup = svg.append('g').attr('class', 'particles');
+
+    tracks.forEach((track, i) => {
+        const af = track.audio_features;
+        const particleCount = Math.floor(50 * af.energy);
+
+        d3.range(particleCount).forEach(j => {
+            // x = sine(particle index * danceability*100) * amp + offset
+            const px = (Math.sin(j * af.danceability * 100) * 0.5 + 0.5) * width;
+            const py = (Math.cos(j * af.valence * 100) * 0.5 + 0.5) * height;
+            const psize = af.loudness * -0.3 + af.speechiness * 5;
+
+            particlesGroup.append('rect')
+                .attr('x', px)
+                .attr('y', py)
+                .attr('width', psize)
+                .attr('height', psize)
+                .attr('fill', `hsla(${(af.acousticness + af.liveness) * 180}, 90%, 60%, ${af.instrumentalness * 0.6})`);
+        });
+    });
+
+    // sine wave layer
+    const wavesGroup = svg.append('g').attr('class', 'waves');
+
+    tracks.forEach((track, i) => {
+        const af = track.audio_features;
+        const progress = i / tracks.length;
+
+        const waveData = d3.range(0, width, 2).map(x => {
+            const waveProgress = x / width;
+            // not including amplitude and offset:
+            // y = sin(waveProgress * tempo) * energy * amp + cos(waveProgress * danceability) * valence * amp + offset
+            const y = height * 0.5 + 
+                     Math.sin(waveProgress * Math.PI * 4 * af.tempo / 100) * af.energy * 200 +
+                     Math.cos(waveProgress * Math.PI * 2 * af.danceability * 10) * af.valence * 100;
+            return [x, y];
+        });
+
+        const line = d3.line()
+            .x(d => d[0])
+            .y(d => d[1])
+            .curve(d3.curveCardinal);
+
+        wavesGroup.append('path')
+            .datum(waveData)
+            .attr('d', line)
+            .attr('fill', 'none')
+            .attr('stroke', `hsla(${progress * 360}, ${af.speechiness * 100}%, 50%, ${af.liveness * 0.25})`)
+            .attr('stroke-width', af.acousticness * 10 + 1);
+    });
+
 
     // handle window resize
     window.addEventListener('resize', () => {
