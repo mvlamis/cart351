@@ -4,16 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Data Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <div>
+    <div class="layout">
         <header>
             <h1>Music Data Visualizer</h1>
         </header>
 
         <div class="card">
             {% if not spotify_logged_in and not lastfm_logged_in %}
-                Click below to connect and import your data
+                <p class="intro-text">Sign in with Spotify or input your Last.fm username</p>
 
                 <div class="login-options">
                     <a href="/login/spotify" class="login-btn spotify-btn">
@@ -38,7 +39,7 @@
                         <p>Platform: {{ user_data.platform|capitalize }}</p>
                     </div>
 
-                    <a href="{{ url_for('visual') }}" class="login-btn">Open Visualizer</a>
+                    <a href="{{ url_for('visual') }}" class="visualizer-btn">Open Visualizer</a>
                 {% endif %}
 
                 {% if recent_tracks %}
@@ -51,14 +52,38 @@
                                     <span> by {{ track.artists[0].name }}</span>
                                     {% if track.audio_features %}
                                         <div class="audio-features">
-                                            <p>Danceability: {{ track.audio_features.danceability }}</p>
-                                            <p>Energy: {{ track.audio_features.energy }}</p>
-                                            <p>Instrumentalness: {{ track.audio_features.instrumentalness }}</p>
-                                            <p>Liveness: {{ track.audio_features.liveness }}</p>
-                                            <p>Loudness: {{ track.audio_features.loudness }}</p>
-                                            <p>Speechiness: {{ track.audio_features.speechiness }}</p>
-                                            <p>Tempo: {{ track.audio_features.tempo }}</p>
-                                            <p>Valence: {{ track.audio_features.valence }}</p>
+                                            <div>
+                                                <p>Danceability</p>
+                                                <p>{{ track.audio_features.danceability }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Energy</p>
+                                                <p>{{ track.audio_features.energy }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Instrumentalness</p>
+                                                <p>{{ track.audio_features.instrumentalness }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Liveness</p>
+                                                <p>{{ track.audio_features.liveness }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Loudness</p>
+                                                <p>{{ track.audio_features.loudness }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Speechiness</p>
+                                                <p>{{ track.audio_features.speechiness }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Tempo</p>
+                                                <p>{{ track.audio_features.tempo }}</p>
+                                            </div>
+                                            <div>
+                                                <p>Valence</p>
+                                                <p>{{ track.audio_features.valence }}</p>
+                                            </div>
                                         </div>
                                     {% endif %}
 

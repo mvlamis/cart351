@@ -9,16 +9,8 @@ Since I'm using an API with so many different audio feature variables, It was di
 
 Getting the project to this point took a lot longer than I expected, in no small part because of the Reccobeats API. Their documentation is pretty sparse and I had to do a lot of trial and error to figure out how to get the audio features for multiple tracks at once. Overall, I'm happy with how my first Flask app turned out and I learned a lot about server-side web development in the process.
 
-
-
 - API Documentation
     - https://www.last.fm/api
     - https://developer.spotify.com/documentation/web-api
     - https://reccobeats.com/docs/documentation/introduction
     - https://d3js.org/getting-started
-
-TODO
-- loading screen with per song progress bar
-- prompt to refresh if user has data already
-- styling
-- base template?
