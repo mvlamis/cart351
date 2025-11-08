@@ -2,6 +2,18 @@ window.onload = function() {
     const width = window.innerWidth;
     const height = window.innerHeight;
 
+    const backBtn = document.getElementById('backBtn');
+    let hideTimeout;
+
+    // show back button on mouse move
+    document.addEventListener('mousemove', () => {
+        backBtn.classList.add('visible');
+        clearTimeout(hideTimeout);
+        hideTimeout = setTimeout(() => {
+            backBtn.classList.remove('visible');
+        }, 1000);
+    });
+
     const svg = d3.select('#visualization')
         .append('svg')
         .attr('width', width)

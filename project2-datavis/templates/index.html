@@ -14,7 +14,7 @@
 
         <div class="card">
             {% if not spotify_logged_in and not lastfm_logged_in %}
-                <p class="intro-text">Sign in with Spotify or input your Last.fm username</p>
+                <p class="intro-text">Sign in with Spotify, input your Last.fm username, or use demo data</p>
 
                 <div class="login-options">
                     <a href="/login/spotify" class="login-btn spotify-btn">
@@ -24,7 +24,11 @@
                         <input type="text" name="username" placeholder="Last.fm Username" required>
                         <button type="submit" class="login-btn lastfm-btn">Connect Last.fm</button>
                     </form>
+                    <a href="/demo" class="login-btn demo-btn">
+                        Use demo data
+                    </a>
                 </div>
+                <p class="intro-text">It may take a few moments to fetch and process your data after logging in.</p>
             {% else %}
                 {% if user_data %}
                     <div class="user-info">
@@ -96,9 +100,11 @@
                     <a href="/logout" class="login-btn logout-btn">
                         Logout
                     </a>
+                    
                 </div>
             {% endif %}
         </div>
     </div>
+    <footer>Made with HATE by Michael Vlamis</footer>
 </body>
 </html>

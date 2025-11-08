@@ -32,6 +32,8 @@ RECCOBEATS_API_AUDIO_FEATURES = "https://api.reccobeats.com/v1/track/{track_id}/
 # Data storage file
 DATA_FILE = 'data/user_data.json'
 
+DEMO_USERNAME = 'WonkaWizard34'
+
 # Ensure data directory exists
 os.makedirs('data', exist_ok=True)
 
@@ -225,6 +227,9 @@ def index():
             for track in recent_tracks:
                 track['audio_features'] = track.get('audio_features', {})
 
+    # hide demo username in user info
+    if user_data and user_data.get('profile', {}).get('name') == DEMO_USERNAME:
+        user_data['profile']['name'] = 'Demo User'
 
     return render_template(
         'index.html',
@@ -360,6 +365,12 @@ def visual():
         platform=session['current_platform'],
         listening_data=listening_data
     )
+
+
+@app.route('/demo')
+def demo():
+    session['lastfm_username'] = DEMO_USERNAME
+    return redirect(url_for('callback_lastfm'))
 
 
 app.run(debug=True, port=5001)
