@@ -26,7 +26,8 @@ LASTFM_API_KEY = os.getenv('LASTFM_API_KEY')
 LASTFM_API_BASE = 'http://ws.audioscrobbler.com/2.0/'
 
 # ReccoBeats API Configuration
-PROXY_BASE = os.getenv("RECCO_PROXY_BASE", "https://cart351.onrender.com/")
+RECCOBEATS_API_TRACK = "https://api.reccobeats.com/v1/track?ids={track_id}"
+RECCOBEATS_API_AUDIO_FEATURES = "https://api.reccobeats.com/v1/track/{track_id}/audio-features"
 
 # Data storage file
 DATA_FILE = 'data/user_data.json'
@@ -153,14 +154,28 @@ def get_lastfm_user_data(username):
 
 def get_reccobeats_tracks(id_list):
     track_string = ','.join(id_list)
-    url = f"{PROXY_BASE}/reccobeats/track"
-    resp = requests.get(url, params={"ids": track_string}, timeout=10)
-    return resp.json()
+    url = RECCOBEATS_API_TRACK.format(track_id=track_string)
+    
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()
 
 def get_reccobeats_audio_features(id):
-    url = f"{PROXY_BASE}/reccobeats/audio-features/{id}"
-    resp = requests.get(url, timeout=10)
-    return resp.json()
+    url = RECCOBEATS_API_AUDIO_FEATURES.format(track_id=id)
+    
+    payload = {}
+    headers = {
+        'Accept': 'application/json'
+    }
+
+    response = requests.get(url, headers=headers)
+
+    return response.json()
 
 def search_spotify_track(track_name, artist_name, access_token):
     headers = {'Authorization': f'Bearer {access_token}'}
@@ -358,6 +373,5 @@ def demo():
     return redirect(url_for('callback_lastfm'))
 
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+app.run(debug=True, port=5001)
 
