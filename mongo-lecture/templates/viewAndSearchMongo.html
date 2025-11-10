@@ -1,0 +1,19 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+<!-- js for this page-->
+{% block scriptblock %}
+<script src="{{url_for('static',filename='js/script_search.js')}}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="searchFormContainer">
+    <h1> SEARCH & VIEW</h1>
+    <form id="searchForm" action="">
+        <p>Search By Artist: <input type="text" size="24" maxlength="40" name="a_search" id="a_search">
+            <input type="submit" name="submit" value="submit my info" id="buttonSearch" />
+        </p>
+    </form>
+</div>
+<!-- NEW for the result -->
+<div id="result"></div>
+{% endblock %}

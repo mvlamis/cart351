@@ -1,0 +1,20 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/insertMany">
+    <input type="submit" style="width: min-content;" value="testInsert" />
+</form>
+<form action="/updateOne">
+    <input type="submit" style="width: min-content;" value="updateOne" />
+</form>
+<form action="/updatePoints">
+    <input type="submit" style="width: min-content;" value="updatePoints" />
+</form>
+<form action="/updateOneRepeat">
+    <input type="submit" style="width: min-content;" value="updateRepeat" />
+</form>
+<form action="/updateMany">
+    <input type="submit" style="width: min-content;" value="updateMany" />
+</form>
+{% endblock %}
