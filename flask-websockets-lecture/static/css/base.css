@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: rgb(255, 221, 0);
+    font-family: 'Roboto', sans-serif;
+
+}
+
+header {
+    height: 10vh;
+    background-color: rgb(243, 234, 180);
+    padding-top: 5vh;
+    color: rgb(84, 84, 84)
+}
+
+header h1 {
+
+    text-align: center;
+}
+
+main {
+    margin-top: 1vh;
+    background-color: rgb(243, 234, 180);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 15px;
+    width: 100%;
+
+}
+
+.username-container {
+    margin: 0 auto;
+    padding: 2px;
+    min-width: 500px;
+    max-width: 40%;
+
+}
+
+.username-container input {
+    font-size: 22px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+footer {
+    background: #781be2;
+    position: relative;
+    top: 70vh;
+    height: 10vh;
+    text-align: center;
+    padding-top: 10px;
+    color: white;
+
+}
+
+#chat {
+    width: 98%;
+    margin: 0 auto;
+    display: none
+}
+
+
+#container {
+    margin: 0 auto;
+    width: 70%;
+    margin-top: 20px;
+    font-size: 18px;
+    background: #be91f2;
+    height: 550px;
+    padding: 0;
+}
+
+#container ul {
+    width: 95%;
+    margin-left: 2%;
+    height: 450px;
+    color: black;
+    padding: 0;
+}
+
+
+.chat-text-container {
+    margin: 0 auto;
+    width: 70%;
+    margin: 0 auto;
+    padding: 2px;
+
+}
+
+.chat-text-container input {
+    font-size: 22px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+.chat-text-container label {
+    font-size: 22px;
+    margin-left: 10px;
+    padding: 5px;
+}
+
+#chatList li {
+    list-style-type: none;
+    padding: 5px;
+    color: white;
+    font-size: 16px;
+}
+
+.uTit {
+    color: #781be2;
+
+}
+
+.uMessage {
+    color: #f2f4ed;
+}
+
+/******/
+#p5Test {
+    width: 800px;
+    display: none;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#c-button:hover {
+    background: white;
+    color: #781be2;
+    cursor: pointer;
+    filter: drop-shadow(1px 1px 1px #9d62e1);
+}
+
+#d-button {
+    background: #781be2;
+    width: max-content;
+    padding: 5px;
+    color: white;
+    font-size: 24px;
+}
+
+#d-button:hover {
+    background: white;
+    color: #781be2;
+    cursor: pointer;
+    filter: drop-shadow(1px 1px 1px #9d62e1);
+}
+
+.username-container {
+    display: none;
+}

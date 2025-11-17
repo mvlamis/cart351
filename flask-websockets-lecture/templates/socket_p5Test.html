@@ -1,0 +1,26 @@
+<!-- will be a child of base-->
+{% extends "base.html" %}
+<!-- js for this page-->
+{% block scriptblock %}
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.8.1/socket.io.js"></script>
+<script src="{{url_for('static',filename='js/p5_lib/p5.min.js')}}"></script>
+<script src="{{url_for('static',filename='js/p5_lib/p5.sound.min.js')}}"></script>
+<script src="{{url_for('static',filename='js/Flower.js')}}"></script>
+<script src="{{url_for('static',filename='js/clientP5.js')}}"></script>
+{% endblock %}
+{% block content %}
+
+<section class="username-container">
+    <p>
+        <input type="text" id="uName" placeholder="enter your name" />
+        <input type="button" id="uButton" value="submit" />
+    </p>
+</section>
+<section id="p5Test">
+    <h3>HELLO P5!</h3>
+    <div id="p5Container">
+
+    </div>
+</section>
+{% endblock %}
