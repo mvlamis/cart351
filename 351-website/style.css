@@ -6,7 +6,7 @@
     --page-edge: #d5c3a1;
     --gold: #c7a349;
     font-family: "Playfair Display", "Georgia", serif;
-}
+} 
 
 *,
 *::before,
@@ -70,7 +70,6 @@ body {
 
 .journal-cover--back {
     z-index: 1;
-    /* transform: rotateY(-180deg) translateZ(-2px); */
     background: linear-gradient(135deg, var(--leather-dark), #140a04);
 }
 
@@ -83,9 +82,27 @@ body {
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: linear-gradient(135deg, var(--leather-highlight), #6b4024);
     transform: rotateY(180deg);
     backface-visibility: hidden;
+    background:
+        linear-gradient(135deg, var(--leather-highlight), #6b4024),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px);
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.55);
+    border: 2px solid rgba(255,255,255,0.15);
+}
+
+.journal-cover--back::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    transform: rotateY(0deg);
+    backface-visibility: hidden;
+    background:
+        linear-gradient(135deg, var(--leather-highlight), #6b4024),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px);
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.55);
+    border: 2px solid rgba(255,255,255,0.15);
 }
 
 .journal-emboss {
@@ -157,3 +174,100 @@ body {
     letter-spacing: 0.05em;
     transition: background 0.2s ease, color 0.2s ease;
 }
+
+/* index */
+.library-title {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    text-align: center;
+    border-bottom: 2px solid rgba(199, 163, 73, 0.3);
+    padding-bottom: 1rem;
+}
+
+.bookshelf-scene {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookshelf {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.shelf-plank {
+    width: 600px;
+    height: 25px;
+    background: linear-gradient(0deg, #3e2723, #432e28, #593c36);
+    border-radius: 4px;
+    margin-top: -2px;
+}
+
+.book-spine {
+    display: block;
+    width: 60px;
+    height: 300px;
+    background: linear-gradient(90deg, var(--leather-dark), var(--leather), var(--leather-dark));
+    border-radius: 4px 4px 0 0;
+    box-shadow: inset 3px 0 8px rgba(0,0,0,0.4), 5px 0 10px rgba(0,0,0,0.5);
+    text-decoration: none;
+    position: relative;
+    cursor: pointer;
+    border-top: 1px solid rgba(255,255,255,0.15);
+}
+
+.spine-text {
+    display: block;
+    color: var(--gold);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(180deg);
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.book-journal {
+    height: 320px;
+    background: linear-gradient(90deg, #2a1509, #4a2812, #2a1509);
+}
+
+.book-exercises {
+    height: 290px;
+    width: 55px;
+    background: linear-gradient(90deg, #0d1b2a, #1b263b, #0d1b2a); /* Navy */
+}
+
+.book-projects {
+    height: 340px;
+    width: 70px;
+    background: linear-gradient(90deg, #1b2a1b, #2f4f2f, #1b2a1b); /* Forest Green */
+}
+
+.book-spine::before,
+.book-spine::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #8a6e2f, var(--gold), #8a6e2f);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+
+.book-spine::before { top: 30px; }
+.book-spine::after { bottom: 30px; }

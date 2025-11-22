@@ -15,17 +15,30 @@ const updateJournal = () => {
 };
 
 journal.addEventListener("click", (e) => {
-    const rect = journal.getBoundingClientRect();
-    const clickX = e.clientX - rect.left;
-    const midpoint = rect.width / 2;
     const total = pages.length;
+    const clickedElement = e.target.closest('.journal-cover, .journal-page');
     
-    if (clickX > midpoint && currentPage < total) {
-        // Click on right side - flip forward
+    // click on front cover when closed: flip forward
+    if (clickedElement?.classList.contains('journal-cover--front') && 
+        !frontCover.classList.contains('is-open') && 
+        currentPage < total) {
         currentPage += 1;
         updateJournal();
-    } else if (clickX <= midpoint && currentPage > 0) {
-        // Click on left side - flip backward
+    } 
+    // click on a page that hasn't been flipped yet: flip forward
+    else if (clickedElement?.classList.contains('journal-page') && 
+             !clickedElement.classList.contains('is-flipped') && 
+             currentPage < total) {
+        currentPage += 1;
+        updateJournal();
+    }
+    // click on a flipped page or back cover: flip backward
+    else if (((clickedElement?.classList.contains('journal-page') && 
+               clickedElement.classList.contains('is-flipped')) ||
+              clickedElement?.classList.contains('journal-cover--back') ||
+              (clickedElement?.classList.contains('journal-cover--front') && 
+               frontCover.classList.contains('is-open'))) && 
+             currentPage > 0) {
         currentPage -= 1;
         updateJournal();
     }
