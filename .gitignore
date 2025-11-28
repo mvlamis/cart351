@@ -1,3 +1,4 @@
 .DS_Store
 mongo-lecture/.env
 data/user_data.json
+exercise-five/.env
