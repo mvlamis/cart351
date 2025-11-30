@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="signup-form">
+    <h2>Sign Up</h2>
+    <form action="/signup" method="post">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+
+        <label for="house">Choose Your House:</label>
+        <select id="house" name="house" required>
+            <option value="1">1 House</option>
+            <option value="2">2 House</option>
+            <option value="3">3 House</option>
+        </select>
+
+        <button type="submit">Create Account</button>
+    </form>
+</div>
+{% endblock %}
