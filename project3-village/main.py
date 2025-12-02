@@ -9,5 +9,14 @@ def home():
 def signup():
     return render_template('signup.html')
 
+@app.route('/login')
+def login():
+    return render_template('login.html')
+
+@app.route('/map')
+def map_view():
+    return render_template('map.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
