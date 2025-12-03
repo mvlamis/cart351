@@ -2,21 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.map-grid');
     grid.style.position = 'relative';
 
-    // mock data for now
-    const houseData = Array.from({ length: 20 }, (_, i) => ({
-        id: i + 1,
-        name: i + 1,
-        ownerId: null, // placeholder for user IDs
-        image: null,   // placeholder for images
-        friends: []    // list of connected house IDs
-    }));
-
-    // mock connections
-    houseData[0].friends = [7, 6]; 
-    houseData[7].friends = [17, 2, 5];
-    houseData[13].friends = [13 ,18, 20, 5];
-
-
     // svg layer for drawing connection lines
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     Object.assign(svg.style, {
@@ -30,40 +15,53 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     grid.appendChild(svg);
 
-    houseData.forEach(house => {
-        const houseDiv = document.createElement('div');
-        houseDiv.className = 'house-placeholder';
-        houseDiv.dataset.id = house.id;
-        houseDiv.style.zIndex = '1';
+    // Load users from database
+    fetch('/api/users')
+        .then(response => response.json())
+        .then(users => {
+            // Map database fields to the structure expected by the renderer
+            const houseData = users.map(user => ({
+                id: user._id,
+                name: user.username,
+                friends: user.friends || []
+            }));
 
-        const label = document.createElement('span');
-        label.className = 'house-label';
-        label.textContent = house.name;
+            houseData.forEach(house => {
+                const houseDiv = document.createElement('div');
+                houseDiv.className = 'house-placeholder';
+                houseDiv.dataset.id = house.id;
+                houseDiv.style.zIndex = '1';
 
-        houseDiv.appendChild(label);
-        grid.appendChild(houseDiv);
-    });
+                const label = document.createElement('span');
+                label.className = 'house-label';
+                label.textContent = house.name;
 
-    // after layout, draw connections
-    setTimeout(() => {
-        const drawnConnections = new Set();
-
-        houseData.forEach(house => {
-            const houseEl = grid.querySelector(`[data-id='${house.id}']`);
-            
-            house.friends.forEach(friendId => {
-                // create a unique key (smaller-larger) to avoid drawing the same line twice
-                const key = [house.id, friendId].sort().join('-');
-                if (drawnConnections.has(key)) return;
-                drawnConnections.add(key);
-
-                const friendEl = grid.querySelector(`[data-id='${friendId}']`);
-                if (houseEl && friendEl) {
-                    drawLine(svg, houseEl, friendEl, grid);
-                }
+                houseDiv.appendChild(label);
+                grid.appendChild(houseDiv);
             });
-        });
-    }, 100);
+
+            // after layout, draw connections
+            setTimeout(() => {
+                const drawnConnections = new Set();
+
+                houseData.forEach(house => {
+                    const houseEl = grid.querySelector(`[data-id='${house.id}']`);
+                    
+                    house.friends.forEach(friendId => {
+                        // create a unique key (smaller-larger) to avoid drawing the same line twice
+                        const key = [house.id, friendId].sort().join('-');
+                        if (drawnConnections.has(key)) return;
+                        drawnConnections.add(key);
+
+                        const friendEl = grid.querySelector(`[data-id='${friendId}']`);
+                        if (houseEl && friendEl) {
+                            drawLine(svg, houseEl, friendEl, grid);
+                        }
+                    });
+                });
+            }, 100);
+        })
+        .catch(err => console.error('Error loading map data:', err));
 });
 
 function drawLine(svg, el1, el2, container) {
