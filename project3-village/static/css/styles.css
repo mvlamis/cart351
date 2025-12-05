@@ -4,11 +4,9 @@
 
 body {
     font-family: futura-pt-condensed, sans-serif;
-    /* font-weight: 500; */
     margin: 0;
     padding: 0;
     background-color: #003059;
-    /* overflow: hidden; */
 }
 
 nav {
@@ -19,7 +17,6 @@ nav {
     justify-content: space-between;
     align-items: center;
     font-size: 2em;
-    overflow: hidden;
     gap: 30px;
     height: var(--nav-height);
 }
@@ -28,6 +25,45 @@ nav a {
     color: #67d3d1;
     text-decoration: none;
     margin: 0 15px;
+}
+
+.user-menu {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.dropdown-content a, 
+.dropdown-content span {
+    font-weight: normal;
+    color: #000;
+    padding: 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.dropdown-content .user-greeting {
+    font-weight: bold;
+    cursor: default;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.user-menu:hover .dropdown-content {
+    display: block;
 }
 
 h1 {
@@ -56,6 +92,16 @@ h3 {
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+input {
+    padding: 10px;
+    font-size: 1.2rem;
+    border-radius: 5px;
+    border: none;
+    width: 250px;
+    margin-right: 0px;
+    font-family: futura-pt-condensed, sans-serif;
 }
 
 .auth-buttons {
@@ -99,6 +145,7 @@ h2 {
 .signup-form form {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
     width: 300px;
 }
@@ -108,4 +155,136 @@ h2 {
     background: #ffdddd;
     padding: 10px;
     margin: 10px;
+}
+
+.friends-container {
+    padding: 20px;
+    text-align: center;
+}
+
+.friend-card {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    padding: 20px;
+    margin: 15px;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    vertical-align: top;
+}
+
+.friend-card h3 {
+    margin: 0 0 15px 0;
+    padding: 0;
+    font-size: 1.5rem;
+    color: inherit;
+}
+
+.friend-card button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: transform 0.1s;
+}
+
+.friends-list .friend-card {
+    background-color: #67d3d1;
+    color: #003059;
+}
+
+.friends-list .friend-card button {
+    background-color: #003059;
+    color: #67d3d1;
+}
+
+.search-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-form button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #e4ac50;
+    color: #913d00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: futura-pt-condensed, sans-serif;
+    font-weight: bold;
+}
+
+
+.request-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.request-actions form {
+    margin: 0;
+}
+
+.accept-btn, .decline-btn {
+    border: none;
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.accept-btn {
+    color: #777d23;
+}
+
+.decline-btn {
+    color: #b24f3a;
+}
+
+.friends-list-view {
+    list-style: none;
+    padding: 0;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.friend-list-item {
+    background-color: #67d3d1;
+    color: #003059;
+    padding: 15px 20px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.friend-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.remove-btn {
+    background-color: transparent;
+    color: #003059;
+    border: none;
+}
+
+.add-btn {
+    background-color: #e4ac50;
+    color: #913d00;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: bold;
+    transition: background-color 0.2s;
 }

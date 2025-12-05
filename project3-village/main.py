@@ -99,15 +99,126 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/friends', methods=['GET', 'POST'])
+@login_required
+def friends_view():
+    current_user_data = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    
+    # get friends
+    friend_ids = current_user_data.get('friends', [])
+    friends = []
+    if friend_ids:
+        friends = list(users_collection.find({'_id': {'$in': [ObjectId(fid) for fid in friend_ids]}}))
+
+    # get friend requests received
+    request_ids = current_user_data.get('friend_requests_received', [])
+    friend_requests = []
+    if request_ids:
+        friend_requests = list(users_collection.find({'_id': {'$in': [ObjectId(rid) for rid in request_ids]}}))
+
+    # search
+    search_results = []
+    search_query = ""
+    
+    if request.method == 'POST':
+        search_query = request.form.get('search_query')
+        if search_query:
+            # exclude self, friends, sent requests, received requests
+            sent_requests = current_user_data.get('friend_requests_sent', [])
+            exclude_ids = [ObjectId(current_user.id)] + \
+                          [ObjectId(fid) for fid in friend_ids] + \
+                          [ObjectId(sid) for sid in sent_requests] + \
+                          [ObjectId(rid) for rid in request_ids]
+
+            # search for users matching query (case-insensitive)
+            search_results = list(users_collection.find({
+                'username': {'$regex': search_query, '$options': 'i'},
+                '_id': {'$nin': exclude_ids}
+            }))
+
+    return render_template('friends.html', 
+                           friends=friends, 
+                           friend_requests=friend_requests, 
+                           search_results=search_results,
+                           search_query=search_query)
+
+@app.route('/send_request/<user_id>', methods=['POST'])
+@login_required
+def send_request(user_id):
+    # add to target's received requests
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {'$addToSet': {'friend_requests_received': current_user.id}}
+    )
+    # add to sender's sent requests to track pending
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {'$addToSet': {'friend_requests_sent': user_id}}
+    )
+    flash('Friend request sent!')
+    return redirect(url_for('friends_view'))
+
+@app.route('/accept_request/<user_id>', methods=['POST'])
+@login_required
+def accept_request(user_id):
+    # add to current user's friends and remove from requests
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {
+            '$addToSet': {'friends': user_id},
+            '$pull': {'friend_requests_received': user_id}
+        }
+    )
+    # add to sender's friends and remove from sent
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {
+            '$addToSet': {'friends': current_user.id},
+            '$pull': {'friend_requests_sent': current_user.id}
+        }
+    )
+    flash('Friend request accepted!')
+    return redirect(url_for('friends_view'))
+
+@app.route('/decline_request/<user_id>', methods=['POST'])
+@login_required
+def decline_request(user_id):
+    # remove from current user's received
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {'$pull': {'friend_requests_received': user_id}}
+    )
+    # remove from sender's sent
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {'$pull': {'friend_requests_sent': current_user.id}}
+    )
+    flash('Friend request declined.')
+    return redirect(url_for('friends_view'))
+
+@app.route('/remove_friend/<user_id>', methods=['POST'])
+@login_required
+def remove_friend(user_id):
+    # mutual removal
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {'$pull': {'friends': user_id}}
+    )
+    users_collection.update_one(
+        {'_id': ObjectId(user_id)},
+        {'$pull': {'friends': current_user.id}}
+    )
+    flash('Friend removed.')
+    return redirect(url_for('friends_view'))
+
 @app.route('/api/users')
 def get_users():
-    # Fetch all users, exclude passwords
+    # fetch all users, exclude passwords
     users = list(users_collection.find({}, {'password': 0}))
     
-    # Convert ObjectId to string for JSON serialization
+    # convert ObjectId to string for JSON 
     for user in users:
         user['_id'] = str(user['_id'])
-        # Ensure friends list exists
         if 'friends' not in user:
             user['friends'] = []
             
