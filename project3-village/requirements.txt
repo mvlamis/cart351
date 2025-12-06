@@ -1,0 +1,9 @@
+flask
+flask_login
+pymongo
+requests
+sqlalchemy
+werkzeug
+python-dotenv
+dnspython
+certifi

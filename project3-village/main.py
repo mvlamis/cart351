@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 import os
+import certifi
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -17,7 +18,7 @@ db_name = os.getenv('DATABASE_NAME')
 # MongoDB Setup
 uri = f"mongodb+srv://{db_user}:{db_pass}@cart351-flask.7fkryat.mongodb.net/{db_name}?retryWrites=true"
 app.config["MONGO_URI"] = uri
-client = MongoClient(uri)
+client = MongoClient(uri, tlsCAFile=certifi.where(), connect=False, socketTimeoutMS=5000)
 db = client[db_name]
 users_collection = db['villageUsers']
 
