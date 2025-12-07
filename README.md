@@ -1,2 +1,1 @@
-# CART351-SKELETON
- sample repo
+Journal code modified from https://codepen.io/rokobuljan/pen/jORNEyz

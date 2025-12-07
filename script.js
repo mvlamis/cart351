@@ -15,6 +15,8 @@ const updateJournal = () => {
 };
 
 journal.addEventListener("click", (e) => {
+    if (e.target.closest('a')) return;
+
     const total = pages.length;
     const clickedElement = e.target.closest('.journal-cover, .journal-page');
     

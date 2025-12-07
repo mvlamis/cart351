@@ -180,6 +180,30 @@ body {
     text-align: left;
 }
 
+.project-screenshot {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+}
+
+.project-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: var(--leather-highlight);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.2s ease;
+    border-bottom: 1px solid transparent;
+}
+
+.project-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
 .page-front::after {
     content: "";
     position: absolute;
