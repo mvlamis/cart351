@@ -2,10 +2,11 @@
     --leather: #3a1f0e;
     --leather-dark: #2a1509;
     --leather-highlight: #5c3520;
+    --leather-inner-dark: #6b4024;
     --page: #fdf5e6;
     --page-edge: #d5c3a1;
     --gold: #c7a349;
-    font-family: "Playfair Display", "Georgia", serif;
+    font-family: "Georgia", serif;
 } 
 
 *,
@@ -85,7 +86,7 @@ body {
     transform: rotateY(180deg);
     backface-visibility: hidden;
     background:
-        linear-gradient(135deg, var(--leather-highlight), #6b4024),
+        linear-gradient(135deg, var(--leather-highlight), var(--leather-inner-dark)),
         repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px);
     box-shadow: inset 0 0 25px rgba(0,0,0,0.55);
     border: 2px solid rgba(255,255,255,0.15);
@@ -99,7 +100,7 @@ body {
     transform: rotateY(0deg);
     backface-visibility: hidden;
     background:
-        linear-gradient(135deg, var(--leather-highlight), #6b4024),
+        linear-gradient(135deg, var(--leather-highlight), var(--leather-inner-dark)),
         repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 6px, transparent 6px 12px);
     box-shadow: inset 0 0 25px rgba(0,0,0,0.55);
     border: 2px solid rgba(255,255,255,0.15);
@@ -112,6 +113,14 @@ body {
     font-size: 1rem;
     text-align: center;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.6);
+}
+
+.journal-author {
+    position: absolute;
+    bottom: 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    opacity: 0.8;
 }
 
 .journal-pages {
@@ -127,25 +136,73 @@ body {
 .journal-page {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, var(--page), #fffaf0);
-    border-radius: 6px;
-    border-left: 2px solid var(--page-edge);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     transform-origin: left center;
     transition: transform 0.9s ease, box-shadow 0.9s ease;
+    transform-style: preserve-3d;
 }
 
-.journal-page::after {
+.page-front,
+.page-back {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--page), #fffaf0);
+    border-left: 2px solid var(--page-edge);
+    border-radius: 6px;
+    backface-visibility: hidden;
+    overflow: hidden;
+}
+
+.page-front {
+    padding: 3rem 2rem 2rem 2.5rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #2a1509;
+    z-index: 2;
+}
+
+.page-back {
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.journal-page h2 {
+    font-size: 1.2rem;
+    margin: 0 0 1rem 0;
+    color: var(--leather-highlight);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 0.5rem;
+    font-family: "Playfair Display", "Georgia", serif;
+}
+
+.journal-page p {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.page-front::after {
     content: "";
     position: absolute;
     inset: 1rem;
     border: 1px dashed rgba(0, 0, 0, 0.08);
+    pointer-events: none;
 }
 
-.journal-page:nth-child(1) { z-index: 16; }
-.journal-page:nth-child(2) { z-index: 15; }
-.journal-page:nth-child(3) { z-index: 14; }
-.journal-page:nth-child(4) { z-index: 13; }
+.journal-page:nth-child(1) { z-index: 30; }
+.journal-page:nth-child(2) { z-index: 29; }
+.journal-page:nth-child(3) { z-index: 28; }
+.journal-page:nth-child(4) { z-index: 27; }
+.journal-page:nth-child(5) { z-index: 26; }
+.journal-page:nth-child(6) { z-index: 25; }
+.journal-page:nth-child(7) { z-index: 24; }
+.journal-page:nth-child(8) { z-index: 23; }
+.journal-page:nth-child(9) { z-index: 22; }
+.journal-page:nth-child(10) { z-index: 21; }
+.journal-page:nth-child(11) { z-index: 20; }
+.journal-page:nth-child(12) { z-index: 19; }
+.journal-page:nth-child(13) { z-index: 18; }
+.journal-page:nth-child(14) { z-index: 17; }
+.journal-page:nth-child(15) { z-index: 16; }
 
 .journal-page.is-flipped {
     transform: rotateY(-170deg);
@@ -181,7 +238,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.2em;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    margin-bottom: 2rem;
+    margin: 60px 0;
     font-size: 2rem;
     text-align: center;
     border-bottom: 2px solid rgba(199, 163, 73, 0.3);
@@ -193,6 +250,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100vh;
 }
 
 .bookshelf {
@@ -202,20 +260,12 @@ body {
     padding: 0 2rem;
     position: relative;
     z-index: 10;
-}
-
-.shelf-plank {
-    width: 600px;
-    height: 25px;
-    background: linear-gradient(0deg, #3e2723, #432e28, #593c36);
-    border-radius: 4px;
-    margin-top: -2px;
+    height: 100%;
+    width: 40vw;
 }
 
 .book-spine {
     display: block;
-    width: 60px;
-    height: 300px;
     background: linear-gradient(90deg, var(--leather-dark), var(--leather), var(--leather-dark));
     border-radius: 4px 4px 0 0;
     box-shadow: inset 3px 0 8px rgba(0,0,0,0.4), 5px 0 10px rgba(0,0,0,0.5);
@@ -228,7 +278,7 @@ body {
 .spine-text {
     display: block;
     color: var(--gold);
-    font-size: 1rem;
+    font-size: 3vw;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     writing-mode: vertical-rl;
@@ -242,19 +292,20 @@ body {
 }
 
 .book-journal {
-    height: 320px;
+    height: 525px;
+    width: 70%;
     background: linear-gradient(90deg, #2a1509, #4a2812, #2a1509);
 }
 
 .book-exercises {
-    height: 290px;
-    width: 55px;
+    height: 450px;
+    width: 50%;
     background: linear-gradient(90deg, #0d1b2a, #1b263b, #0d1b2a); /* Navy */
 }
 
 .book-projects {
-    height: 340px;
-    width: 70px;
+    height: 600px;
+    width: 60%;
     background: linear-gradient(90deg, #1b2a1b, #2f4f2f, #1b2a1b); /* Forest Green */
 }
 
@@ -271,3 +322,25 @@ body {
 
 .book-spine::before { top: 30px; }
 .book-spine::after { bottom: 30px; }
+
+.back-link {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 1rem;
+    position: absolute;
+    bottom: 30px;
+}
+
+.journal--exercises {
+    --leather: #1b263b;
+    --leather-dark: #0d1b2a;
+    --leather-highlight: #3a506b;
+    --leather-inner-dark: #162a40;
+}
+
+.journal--projects {
+    --leather: #2f4f2f;
+    --leather-dark: #1b2a1b;
+    --leather-highlight: #4a7c4a;
+    --leather-inner-dark: #223822;
+}
