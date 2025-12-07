@@ -13,14 +13,24 @@
         <label for="confirm_password">Confirm Password:</label>
         <input type="password" id="confirm_password" name="confirm_password" required>
 
-        <label for="house">Choose Your House:</label>
-        <select id="house" name="house" required>
-            <option value="1">1 House</option>
-            <option value="2">2 House</option>
-            <option value="3">3 House</option>
-        </select>
+        <label>Choose Your House:</label>
+        <div class="house-selection">
+            <label class="house-option">
+                <input type="radio" name="house" value="1" required>
+                <div class="house-selector"></div>
+            </label>
+            <label class="house-option">
+                <input type="radio" name="house" value="2">
+                <div class="house-selector"></div>
+            </label>
+            <label class="house-option">
+                <input type="radio" name="house" value="2">
+                <div class="house-selector"></div>
+            </label>
+        </div>
 
         <button type="submit">Create Account</button>
+        <a href="/login" class="login-link">Or Log In</a>
     </form>
 </div>
 {% endblock %}

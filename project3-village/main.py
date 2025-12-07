@@ -212,6 +212,61 @@ def remove_friend(user_id):
     flash('Friend removed.')
     return redirect(url_for('friends_view'))
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        action = request.form.get('action')
+        
+        if action == 'update_username':
+            new_username = request.form.get('username')
+            if new_username and new_username != current_user.username:
+                if users_collection.find_one({'username': new_username}):
+                    flash('Username already exists')
+                else:
+                    users_collection.update_one({'_id': ObjectId(current_user.id)}, {'$set': {'username': new_username}})
+                    flash('Username updated')
+                    return redirect(url_for('profile'))
+            
+        elif action == 'change_password':
+            current_password = request.form.get('current_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+            
+            user_data = users_collection.find_one({'_id': ObjectId(current_user.id)})
+            if not check_password_hash(user_data['password'], current_password):
+                flash('Incorrect current password')
+            elif new_password != confirm_password:
+                flash('New passwords do not match')
+            else:
+                hashed_password = generate_password_hash(new_password)
+                users_collection.update_one({'_id': ObjectId(current_user.id)}, {'$set': {'password': hashed_password}})
+                flash('Password updated')
+                return redirect(url_for('profile'))
+
+        elif action == 'delete_account':
+            # remove user from friends lists of other users
+            users_collection.update_many(
+                {'friends': current_user.id},
+                {'$pull': {'friends': current_user.id}}
+            )
+            # remove user from friend requests
+            users_collection.update_many(
+                {'friend_requests_received': current_user.id},
+                {'$pull': {'friend_requests_received': current_user.id}}
+            )
+            users_collection.update_many(
+                {'friend_requests_sent': current_user.id},
+                {'$pull': {'friend_requests_sent': current_user.id}}
+            )
+            
+            users_collection.delete_one({'_id': ObjectId(current_user.id)})
+            logout_user()
+            flash('Account deleted')
+            return redirect(url_for('home'))
+            
+    return render_template('profile.html')
+
 @app.route('/api/users')
 def get_users():
     # fetch all users, exclude passwords
