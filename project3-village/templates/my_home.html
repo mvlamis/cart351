@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_home.css') }}">
+
+<div class="home-container">
+    <h2>My Home</h2>
+    
+    <div class="editor-wrapper">
+        <div class="room-display">
+            <img src="{{ url_for('static', filename='images/inside_white.png') }}" class="room-bg">
+            
+            <!-- furniture overlays -->
+            <img id="preview-chair" 
+                 src="{{ url_for('static', filename='images/furniture/chairs/' + (furniture.chair if furniture.chair else 'chair1') + '.png') }}" 
+                 class="furniture-item chair"
+                 style="{% if not furniture.chair %}display: none;{% endif %}">
+            
+            <img id="preview-plant" 
+                 src="{{ url_for('static', filename='images/furniture/plants/' + (furniture.plant if furniture.plant else 'plant1') + '.png') }}" 
+                 class="furniture-item plant"
+                 style="{% if not furniture.plant %}display: none;{% endif %}">
+        </div>
+        
+        <form method="POST" class="furniture-controls">
+            <div class="control-group">
+                <h3>Chairs</h3>
+                <div class="options-grid">
+                    <label class="option-item">
+                        <input type="radio" name="chair" value="chair1" {% if furniture.chair == 'chair1' %}checked{% endif %} onchange="updatePreview('chair', 'chair1')">
+                        <img src="{{ url_for('static', filename='images/furniture/chairs/chair1.png') }}">
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="chair" value="chair2" {% if furniture.chair == 'chair2' %}checked{% endif %} onchange="updatePreview('chair', 'chair2')">
+                        <img src="{{ url_for('static', filename='images/furniture/chairs/chair2.png') }}">
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Plants</h3>
+                <div class="options-grid">
+                    <label class="option-item">
+                        <input type="radio" name="plant" value="plant1" {% if furniture.plant == 'plant1' %}checked{% endif %} onchange="updatePreview('plant', 'plant1')">
+                        <img src="{{ url_for('static', filename='images/furniture/plants/plant1.png') }}">
+                    </label>
+                </div>
+            </div>
+
+            <button type="submit" class="save-btn">Save Changes</button>
+        </form>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/my_home.js') }}"></script>
+{% endblock %}

@@ -32,6 +32,7 @@ class User(UserMixin):
         self.id = str(user_data['_id'])
         self.username = user_data['username']
         self.house = user_data.get('house')
+        self.furniture = user_data.get('furniture', {})
 
     @staticmethod
     def get(user_id):
@@ -277,6 +278,8 @@ def get_users():
         user['_id'] = str(user['_id'])
         if 'friends' not in user:
             user['friends'] = []
+        if 'furniture' not in user:
+            user['furniture'] = {}
             
     return jsonify(users)
 
@@ -284,6 +287,31 @@ def get_users():
 @login_required
 def map_view():
     return render_template('map.html')
+
+@app.route('/my_home', methods=['GET', 'POST'])
+@login_required
+def my_home():
+    if request.method == 'POST':
+        chair = request.form.get('chair')
+        plant = request.form.get('plant')
+        
+        furniture = {
+            'chair': chair,
+            'plant': plant
+        }
+        
+        users_collection.update_one(
+            {'_id': ObjectId(current_user.id)},
+            {'$set': {'furniture': furniture}}
+        )
+        flash('Interior updated!')
+        return redirect(url_for('my_home'))
+
+    # Reload user to get latest data
+    user_data = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    furniture = user_data.get('furniture', {})
+    
+    return render_template('my_home.html', furniture=furniture)
 
 
 if __name__ == '__main__':

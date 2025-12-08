@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const houseData = users.map(user => ({
                 id: user._id,
                 name: user.username,
-                friends: user.friends || []
+                friends: user.friends || [],
+                house: user.house || '1'
             }));
 
             houseData.forEach(house => {
@@ -31,6 +32,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 houseDiv.className = 'house-placeholder';
                 houseDiv.dataset.id = house.id;
                 houseDiv.style.zIndex = '1';
+
+                const img = document.createElement('img');
+                img.src = `/static/images/houses/house${house.house}.png`;
+                img.className = 'house-img';
+                img.alt = 'House';
+                houseDiv.appendChild(img);
 
                 const label = document.createElement('span');
                 label.className = 'house-label';
