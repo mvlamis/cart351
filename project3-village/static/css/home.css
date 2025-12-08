@@ -1,0 +1,198 @@
+.home-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+    position: relative;
+}
+
+.coin-icon-small {
+    width: 14px;
+    vertical-align: middle;
+    margin-left: 2px;
+    margin-bottom: 2px;
+}
+
+.home-frame {
+    width: 80%;
+    margin: 0 auto;
+    position: relative;
+    border: 8px solid #2a1f1f;
+    background-color: #1d1515;
+    overflow: hidden;
+}
+
+.home-bg {
+    width: 100%;
+    display: block;
+}
+
+.furniture {
+    position: absolute;
+    cursor: pointer;
+    user-select: none;
+}
+
+#furniture-chair {
+    bottom: 2%;
+    left: 17%;
+    width: 220px;
+}
+
+
+#furniture-plant {
+    bottom: 2%;
+    left: 80%;
+    width: 200px;
+}
+
+#furniture-sofa {
+    bottom: 3%;
+    left: 41%;
+    width: 400px;
+}
+
+#furniture-table {
+    bottom: 0%;
+    left: 50%;
+    width: 280px;
+}
+
+#furniture-wallart {
+    top: 20%;
+    left: 35%;
+    width: 220px;
+}
+
+.edit-gear {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    cursor: pointer;
+}
+
+#edit-drawer {
+    position: relative;
+    background: #f3f0e7;
+    width: 300px;
+    max-height: 600px; 
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #2a1f1f;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #ccc;
+    flex-shrink: 0;
+}
+
+.drawer-header h3 {
+    margin: 0;
+    font-family: futura-pt-condensed, sans-serif;
+}
+
+.drawer-content {
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-start; 
+    flex-direction: column;
+    gap: 20px;
+    flex-wrap: nowrap;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.furniture-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #eee;
+}
+
+.furniture-row span {
+    width: 100%;
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.swap-btn {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #e4ac50;
+    color: #913d00;
+    cursor: pointer;
+    font-family: futura-pt-condensed, sans-serif;
+}
+
+.swap-btn:hover {
+    background: #f7cf7a;
+}
+
+#close-drawer {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.preview-thumb {
+    width: 50px;
+    height: auto;
+    margin: 0 4px;
+    vertical-align: middle;
+}
+
+.shop-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    background: #fff;
+    padding: 5px;
+}
+
+.shop-btn {
+    padding: 4px 8px;
+    border: none;
+    cursor: pointer;
+    font-family: futura-pt-condensed, sans-serif;
+    font-size: 0.9em;
+    width: 100%;
+}
+
+.btn-buy {
+    background: #4CAF50;
+    color: white;
+}
+
+.btn-buy:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-equip {
+    background: #2196F3;
+    color: white;
+}
+
+.btn-remove {
+    background: #f44336;
+    color: white;
+}
+
+.btn-equipped {
+    background: #e0e0e0;
+    color: #666;
+    cursor: default;
+}

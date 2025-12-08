@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}My Home | The Village{% endblock %}
+
+{% block content %}
+<div class="home-container">
+
+    <div class="home-frame">
+        <!-- background -->
+        <img src="{{ url_for('static', filename='images/home_bg.png') }}" alt="Home background" class="home-bg">
+
+        <!-- furniture -->
+        {% for category in ['chair', 'plant', 'sofa', 'table', 'wallart'] %}
+            {% set equipped_id = current_user.furniture.get(category) %}
+            {% set ns = namespace(src=none) %}
+            {% if catalog and category in catalog %}
+                {% for item in catalog[category] %}
+                    {% if item.id == equipped_id %}
+                        {% set ns.src = item.src %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <img id="furniture-{{ category }}" class="furniture" 
+                style="{% if not ns.src %}display:none;{% endif %}"
+                src="{{ url_for('static', filename='images/' + ns.src) if ns.src else '' }}" 
+                alt="{{ category|title }}">
+        {% endfor %}
+
+        <img id="edit-gear" src="{{ url_for('static', filename='images/gear.png') }}" alt="Edit" class="edit-gear">
+
+    </div>
+    <div id="edit-drawer" class="hidden">
+        <div class="drawer-header">
+            <h3>Furniture</h3>
+            <button id="close-drawer">✕</button>
+        </div>
+        <div class="drawer-content" id="shop-content">
+            <!-- will be added by js -->
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endblock %}

@@ -16,9 +16,8 @@
         <div style="flex-grow: 1;"></div>
         
         {% if current_user.is_authenticated %}
-            <!-- coins -->
             <div class="coins-display">
-                <img src="{{ url_for('static', filename='images/coin.png') }}" class="coin-icon">
+                <img src="{{ url_for('static', filename='images/coin_stack.png') }}" class="coin-icon">
                 <span class="coin-amount">{{ current_user.coins }}</span>
             </div>
             <div class="user-menu">

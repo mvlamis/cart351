@@ -22,6 +22,29 @@ client = MongoClient(uri, tlsCAFile=certifi.where(), connect=False, socketTimeou
 db = client[db_name]
 users_collection = db['villageUsers']
 
+FURNITURE_CATALOG = {
+    'chair': [
+        {'id': 'chair1', 'price': 50, 'src': 'furniture/chairs/chair1.png'},
+        {'id': 'chair2', 'price': 100, 'src': 'furniture/chairs/chair2.png'}
+    ],
+    'plant': [
+        {'id': 'plant1', 'price': 30, 'src': 'furniture/plants/plant1.png'},
+        {'id': 'plant2', 'price': 60, 'src': 'furniture/plants/plant2.png'}
+    ],
+    'sofa': [
+        {'id': 'sofa1', 'price': 150, 'src': 'furniture/sofas/sofa1.png'},
+        {'id': 'sofa2', 'price': 300, 'src': 'furniture/sofas/sofa2.png'}
+    ],
+    'table': [
+        {'id': 'table1', 'price': 80, 'src': 'furniture/table/table1.png'},
+        {'id': 'table2', 'price': 160, 'src': 'furniture/table/table2.png'}
+    ],
+    'wallart': [
+        {'id': 'wallart1', 'price': 40, 'src': 'furniture/wallart/wallart1.png'},
+        {'id': 'wallart2', 'price': 90, 'src': 'furniture/wallart/wallart2.png'}
+    ]
+}
+
 # Flask-Login Setup
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -33,6 +56,7 @@ class User(UserMixin):
         self.username = user_data['username']
         self.house = user_data.get('house')
         self.furniture = user_data.get('furniture', {})
+        self.inventory = user_data.get('inventory', [])
         self.coins = user_data.get('coins', 0)
 
     @staticmethod
@@ -72,7 +96,10 @@ def signup():
         user_id = users_collection.insert_one({
             'username': username,
             'password': hashed_password,
-            'house': house
+            'house': house,
+            'coins': 100, # Give starter coins
+            'inventory': [],
+            'furniture': {}
         }).inserted_id
 
         user = User.get(user_id)
@@ -290,12 +317,12 @@ def map_view():
     return render_template('map.html')
 
 @app.route('/games')
-# @login_required
+@login_required
 def games():
     return render_template('games.html')
 
 @app.route('/games/slime')
-# @login_required
+@login_required
 def game_slime():
     return render_template('game_slime.html')
 
@@ -329,30 +356,93 @@ def api_add_coins():
     coins = user.get('coins', 0)
     return jsonify({'coins': coins}), 200
 
-@app.route('/my_home', methods=['GET', 'POST'])
+
+@app.route('/api/furniture/catalog')
+def get_catalog():
+    return jsonify(FURNITURE_CATALOG)
+
+@app.route('/api/user/furniture', methods=['GET'])
 @login_required
-def my_home():
-    if request.method == 'POST':
-        chair = request.form.get('chair')
-        plant = request.form.get('plant')
+def get_user_furniture():
+    user = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    return jsonify({
+        'inventory': user.get('inventory', []),
+        'equipped': user.get('furniture', {}),
+        'coins': user.get('coins', 0)
+    })
+
+@app.route('/api/furniture/buy', methods=['POST'])
+@login_required
+def buy_furniture():
+    data = request.get_json()
+    item_id = data.get('item_id')
+    
+    # find item price
+    price = 0
+    found = False
+    for category, items in FURNITURE_CATALOG.items():
+        for item in items:
+            if item['id'] == item_id:
+                price = item['price']
+                found = True
+                break
+        if found: break
+    
+    if not found:
+        return jsonify({'error': 'Item not found'}), 404
         
-        furniture = {
-            'chair': chair,
-            'plant': plant
+    user = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    if user.get('coins', 0) < price:
+        return jsonify({'error': 'Not enough coins'}), 400
+        
+    if item_id in user.get('inventory', []):
+        return jsonify({'error': 'Already owned'}), 400
+
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {
+            '$inc': {'coins': -price},
+            '$push': {'inventory': item_id}
         }
-        
+    )
+    return jsonify({'success': True, 'new_balance': user.get('coins', 0) - price})
+
+@app.route('/api/furniture/equip', methods=['POST'])
+@login_required
+def equip_furniture():
+    data = request.get_json()
+    category = data.get('category')
+    item_id = data.get('item_id')
+    
+    if category not in FURNITURE_CATALOG:
+        return jsonify({'error': 'Invalid category'}), 400
+    
+    user = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    
+    if item_id:
+        inventory = user.get('inventory', [])
+        if item_id not in inventory:
+             return jsonify({'error': 'Item not owned'}), 403
+
+        key = f"furniture.{category}"
         users_collection.update_one(
             {'_id': ObjectId(current_user.id)},
-            {'$set': {'furniture': furniture}}
+            {'$set': {key: item_id}}
         )
-        flash('Interior updated!')
-        return redirect(url_for('my_home'))
+    else:
+        # Unequip if item_id is None/missing
+        key = f"furniture.{category}"
+        users_collection.update_one(
+            {'_id': ObjectId(current_user.id)},
+            {'$unset': {key: ""}}
+        )
 
-    # Reload user to get latest data
-    user_data = users_collection.find_one({'_id': ObjectId(current_user.id)})
-    furniture = user_data.get('furniture', {})
-    
-    return render_template('my_home.html', furniture=furniture)
+    return jsonify({'success': True})
+
+@app.route('/home', methods=['GET', 'POST'])
+@login_required
+def my_home():
+    return render_template('home.html', catalog=FURNITURE_CATALOG)
 
 
 if __name__ == '__main__':
