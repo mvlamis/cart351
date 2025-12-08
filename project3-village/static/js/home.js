@@ -25,13 +25,17 @@ document.addEventListener('DOMContentLoaded', () => {
         renderShop();
     });
 
-    gear.addEventListener("click", () => {
-        drawer.classList.remove("hidden");
-    });
+    if (gear) {
+        gear.addEventListener("click", () => {
+            drawer.classList.remove("hidden");
+        });
+    }
 
-    closeBtn.addEventListener("click", () => {
-        drawer.classList.add("hidden");
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener("click", () => {
+            drawer.classList.add("hidden");
+        });
+    }
 
     function updateCoinDisplay() {
         if (coinDisplay) {
@@ -62,11 +66,59 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function createShopItemElement(item, category) {
+        const container = document.createElement('div');
+        container.className = 'shop-item';
+
+        const img = document.createElement('img');
+        img.src = `/static/images/${item.src}`;
+        img.className = 'preview-thumb';
+        container.appendChild(img);
+
+        const btn = document.createElement('button');
+        btn.className = 'shop-btn';
+        
+        const isOwned = userInventory.includes(item.id);
+        const isEquipped = userEquipped[category] === item.id;
+
+        if (isEquipped) {
+            if (category === 'exterior') {
+                btn.textContent = "Current";
+                btn.disabled = true;
+                btn.classList.add('btn-equipped');
+            } else {
+                btn.textContent = "Remove";
+                btn.classList.add('btn-remove');
+                btn.onclick = () => unequipItem(category);
+            }
+        } else if (isOwned) {
+            btn.textContent = "Equip";
+            btn.classList.add('btn-equip');
+            btn.onclick = () => equipItem(category, item.id);
+        } else {
+            btn.innerHTML = `${item.price} <img src="/static/images/coin.png" class="coin-icon-small">`;
+            btn.classList.add('btn-buy');
+            if (userCoins < item.price) btn.disabled = true;
+            btn.onclick = () => buyItem(item.id, item.price);
+        }
+
+        container.appendChild(btn);
+        return container;
+    }
+
     function renderShop() {
+        if (!shopContent) return;
         shopContent.innerHTML = '';
 
-        // create rows for each category
+        // Furniture Section Header
+        const furnHeader = document.createElement('h4');
+        furnHeader.textContent = "Furniture";
+        shopContent.appendChild(furnHeader);
+
+        // create rows for each category EXCEPT exterior
         for (const [category, items] of Object.entries(catalog)) {
+            if (category === 'exterior') continue;
+
             const row = document.createElement('div');
             row.className = 'furniture-row';
             
@@ -75,40 +127,27 @@ document.addEventListener('DOMContentLoaded', () => {
             row.appendChild(label);
 
             items.forEach(item => {
-                // create item container
-                const container = document.createElement('div');
-                container.className = 'shop-item';
-
-                const img = document.createElement('img');
-                img.src = `/static/images/${item.src}`;
-                img.className = 'preview-thumb';
-                container.appendChild(img);
-
-                const btn = document.createElement('button');
-                btn.className = 'shop-btn';
-                
-                const isOwned = userInventory.includes(item.id);
-                const isEquipped = userEquipped[category] === item.id;
-
-                if (isEquipped) {
-                    btn.textContent = "Remove";
-                    btn.classList.add('btn-remove');
-                    btn.onclick = () => unequipItem(category);
-                } else if (isOwned) {
-                    btn.textContent = "Equip";
-                    btn.classList.add('btn-equip');
-                    btn.onclick = () => equipItem(category, item.id);
-                } else {
-                    btn.innerHTML = `${item.price} <img src="/static/images/coin.png" class="coin-icon-small">`;
-                    btn.classList.add('btn-buy');
-                    if (userCoins < item.price) btn.disabled = true;
-                    btn.onclick = () => buyItem(item.id, item.price);
-                }
-
-                container.appendChild(btn);
-                row.appendChild(container);
+                row.appendChild(createShopItemElement(item, category));
             });
 
+            shopContent.appendChild(row);
+        }
+
+        // Exterior Section Header
+        const extHeader = document.createElement('h4');
+        extHeader.textContent = "Exterior";
+        shopContent.appendChild(extHeader);
+
+        if (catalog['exterior']) {
+            const items = catalog['exterior'];
+            const category = 'exterior';
+            
+            const row = document.createElement('div');
+            row.className = 'furniture-row';
+            
+            items.forEach(item => {
+                row.appendChild(createShopItemElement(item, category));
+            });
             shopContent.appendChild(row);
         }
     }

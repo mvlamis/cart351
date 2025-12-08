@@ -42,6 +42,14 @@ FURNITURE_CATALOG = {
     'wallart': [
         {'id': 'wallart1', 'price': 40, 'src': 'furniture/wallart/wallart1.png'},
         {'id': 'wallart2', 'price': 90, 'src': 'furniture/wallart/wallart2.png'}
+    ],
+    'exterior': [
+        {'id': '1', 'price': 0, 'src': 'houses/house1.png'},
+        {'id': '2', 'price': 0, 'src': 'houses/house2.png'},
+        {'id': '3', 'price': 0, 'src': 'houses/house3.png'},
+        {'id': '4', 'price': 500, 'src': 'houses/house4.png'},
+        {'id': '5', 'price': 1000, 'src': 'houses/house5.png'},
+        {'id': '6', 'price': 800, 'src': 'houses/house6.png'}
     ]
 }
 
@@ -97,8 +105,8 @@ def signup():
             'username': username,
             'password': hashed_password,
             'house': house,
-            'coins': 100, # Give starter coins
-            'inventory': [],
+            'coins': 0,
+            'inventory': [house], # Add starter house to inventory
             'furniture': {}
         }).inserted_id
 
@@ -365,9 +373,17 @@ def get_catalog():
 @login_required
 def get_user_furniture():
     user = users_collection.find_one({'_id': ObjectId(current_user.id)})
+    equipped = user.get('furniture', {})
+    equipped['exterior'] = user.get('house') # Add house to equipped list
+    
+    inventory = user.get('inventory', [])
+    # Ensure current house is in inventory for frontend logic
+    if user.get('house') and user.get('house') not in inventory:
+        inventory.append(user.get('house'))
+
     return jsonify({
-        'inventory': user.get('inventory', []),
-        'equipped': user.get('furniture', {}),
+        'inventory': inventory,
+        'equipped': equipped,
         'coins': user.get('coins', 0)
     })
 
@@ -421,16 +437,26 @@ def equip_furniture():
     
     if item_id:
         inventory = user.get('inventory', [])
-        if item_id not in inventory:
+        # Allow equipping current house even if not in inventory (legacy fix)
+        if item_id not in inventory and item_id != user.get('house'):
              return jsonify({'error': 'Item not owned'}), 403
 
-        key = f"furniture.{category}"
-        users_collection.update_one(
-            {'_id': ObjectId(current_user.id)},
-            {'$set': {key: item_id}}
-        )
+        if category == 'exterior':
+            users_collection.update_one(
+                {'_id': ObjectId(current_user.id)},
+                {'$set': {'house': item_id}}
+            )
+        else:
+            key = f"furniture.{category}"
+            users_collection.update_one(
+                {'_id': ObjectId(current_user.id)},
+                {'$set': {key: item_id}}
+            )
     else:
         # Unequip if item_id is None/missing
+        if category == 'exterior':
+             return jsonify({'error': 'Cannot unequip house'}), 400
+
         key = f"furniture.{category}"
         users_collection.update_one(
             {'_id': ObjectId(current_user.id)},
@@ -442,7 +468,21 @@ def equip_furniture():
 @app.route('/home', methods=['GET', 'POST'])
 @login_required
 def my_home():
-    return render_template('home.html', catalog=FURNITURE_CATALOG)
+    return render_template('home.html', catalog=FURNITURE_CATALOG, target_user=current_user, is_owner=True)
+
+@app.route('/visit/<user_id>')
+@login_required
+def visit_home(user_id):
+    target_user = User.get(user_id)
+    if not target_user:
+        flash('User not found')
+        return redirect(url_for('map_view'))
+    
+    is_owner = (user_id == current_user.id)
+    if is_owner:
+        return redirect(url_for('my_home'))
+        
+    return render_template('home.html', catalog=FURNITURE_CATALOG, target_user=target_user, is_owner=False)
 
 
 if __name__ == '__main__':

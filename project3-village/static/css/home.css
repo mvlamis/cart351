@@ -85,6 +85,12 @@
     display: none !important;
 }
 
+h4 {
+    width: 100%;
+    margin: 0;
+    font-size: 1.2em;
+}
+
 .drawer-header {
     display: flex;
     justify-content: space-between;
@@ -97,6 +103,7 @@
 .drawer-header h3 {
     margin: 0;
     font-family: futura-pt-condensed, sans-serif;
+    padding: 0;
 }
 
 .drawer-content {

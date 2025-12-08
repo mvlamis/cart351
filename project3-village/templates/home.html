@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}My Home | The Village{% endblock %}
+{% block title %}{{ target_user.username }}'s Home | The Village{% endblock %}
 
 {% block content %}
 <div class="home-container">
@@ -11,7 +11,7 @@
 
         <!-- furniture -->
         {% for category in ['chair', 'plant', 'sofa', 'table', 'wallart'] %}
-            {% set equipped_id = current_user.furniture.get(category) %}
+            {% set equipped_id = target_user.furniture.get(category) %}
             {% set ns = namespace(src=none) %}
             {% if catalog and category in catalog %}
                 {% for item in catalog[category] %}
@@ -26,20 +26,27 @@
                 alt="{{ category|title }}">
         {% endfor %}
 
-        <img id="edit-gear" src="{{ url_for('static', filename='images/gear.png') }}" alt="Edit" class="edit-gear">
+        {% if is_owner %}
+        <img id="edit-gear" src="{{ url_for('static', filename='images/gear.png') }}" alt="Edit Shop" class="edit-gear">
+        {% endif %}
 
     </div>
+    
+    {% if is_owner %}
     <div id="edit-drawer" class="hidden">
         <div class="drawer-header">
-            <h3>Furniture</h3>
+            <h3>Shop</h3>
             <button id="close-drawer">✕</button>
         </div>
         <div class="drawer-content" id="shop-content">
             <!-- will be added by js -->
         </div>
     </div>
+    {% endif %}
 </div>
 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% if is_owner %}
 <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+{% endif %}
 {% endblock %}

@@ -32,6 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 houseDiv.className = 'house-placeholder';
                 houseDiv.dataset.id = house.id;
                 houseDiv.style.zIndex = '1';
+                houseDiv.style.cursor = 'pointer';
+
+                houseDiv.addEventListener('click', () => {
+                    window.location.href = `/visit/${house.id}`;
+                });
 
                 const img = document.createElement('img');
                 img.src = `/static/images/houses/house${house.house}.png`;
