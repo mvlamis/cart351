@@ -3,3 +3,5 @@ deployment:
   tasks:
     - export DEPLOYPATH=/home/michegdf/village_app/
     - /bin/cp -R project3-village/. $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/tmp
+    - /bin/touch $DEPLOYPATH/tmp/restart.txt
