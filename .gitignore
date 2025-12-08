@@ -1,4 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
 .DS_Store
+.vscode/
+venv/
+env/
 mongo-lecture/.env
 data/user_data.json
 exercise-five/.env

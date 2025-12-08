@@ -2,4 +2,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/michegdf/village_app/
-    - /bin/cp -R project3-village/* $DEPLOYPATH
+    - /bin/cp -R project3-village/. $DEPLOYPATH
