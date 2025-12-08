@@ -16,7 +16,11 @@
         <div style="flex-grow: 1;"></div>
         
         {% if current_user.is_authenticated %}
-            <span>¢0</span>
+            <!-- coins -->
+            <div class="coins-display">
+                <img src="{{ url_for('static', filename='images/coin.png') }}" class="coin-icon">
+                <span class="coin-amount">{{ current_user.coins }}</span>
+            </div>
             <div class="user-menu">
                 <a href="#" class="user-icon">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

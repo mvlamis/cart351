@@ -8,9 +8,9 @@ import certifi
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-app.secret_key = 'secretkey'
 
-load_dotenv()  # Load variables from .env and .flaskenv
+load_dotenv()  # Load variables from .env
+app.secret_key = os.getenv('SECRET_KEY')
 db_user = os.getenv('MONGODB_USER')
 db_pass = os.getenv('DATABASE_PASSWORD')
 db_name = os.getenv('DATABASE_NAME')
@@ -33,6 +33,7 @@ class User(UserMixin):
         self.username = user_data['username']
         self.house = user_data.get('house')
         self.furniture = user_data.get('furniture', {})
+        self.coins = user_data.get('coins', 0)
 
     @staticmethod
     def get(user_id):
@@ -287,6 +288,46 @@ def get_users():
 @login_required
 def map_view():
     return render_template('map.html')
+
+@app.route('/games')
+# @login_required
+def games():
+    return render_template('games.html')
+
+@app.route('/games/slime')
+# @login_required
+def game_slime():
+    return render_template('game_slime.html')
+
+# coins 
+@app.route('/api/user/coins', methods=['GET'])
+@login_required
+def api_get_coins():
+    user = users_collection.find_one({'_id': ObjectId(current_user.id)}, {'password': 0})
+    coins = user.get('coins', 0)
+    return jsonify({'coins': coins}), 200
+
+# add coins to current user (POST) 
+@app.route('/api/user/coins/add', methods=['POST'])
+@login_required
+def api_add_coins():
+    data = request.get_json() or {}
+    try:
+        amount = int(data.get('amount', 0))
+    except (ValueError, TypeError):
+        return jsonify({'error': 'invalid amount'}), 400
+
+    if amount <= 0:
+        return jsonify({'error': 'amount must be positive'}), 400
+
+    users_collection.update_one(
+        {'_id': ObjectId(current_user.id)},
+        {'$inc': {'coins': amount}}
+    )
+
+    user = users_collection.find_one({'_id': ObjectId(current_user.id)}, {'password': 0})
+    coins = user.get('coins', 0)
+    return jsonify({'coins': coins}), 200
 
 @app.route('/my_home', methods=['GET', 'POST'])
 @login_required

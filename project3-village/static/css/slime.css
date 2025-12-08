@@ -1,0 +1,170 @@
+/* --- Village Whack-A-Slime overrides & layout --- */
+
+.game-title {
+    font-size: 3.5rem !important;
+    color: #d66b1d;
+    margin: 0 0 6px 0;
+}
+
+.game-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: #e4ac50;
+    color: #913d00;
+    padding: 10px 28px;
+    border-radius: 20px;
+    font-size: 1.8rem;
+    font-weight: 500;
+    text-decoration: none;
+    box-shadow: 0 2px 0 #0000005b;
+    border-top: 1px solid #ffffff5a;
+    cursor: pointer;
+    font-family: futura-pt-condensed, sans-serif;
+    border: none;
+}
+
+
+#slime-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 120px);
+    grid-gap: 20px;
+    justify-content: center;
+}
+
+.slime-hole {
+    width: 120px;
+    height: 120px;
+    border-radius: 40px;
+    border: 5px solid #302f2e;
+    background-color: #dbdacd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.slime {
+    width: 80px;
+    height: 80px;
+    background-color: transparent;
+    border-radius: 50px;
+    border: 4px solid #395c37;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 26px;
+    user-select: none;
+    transition: transform 0.08s ease;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+.slime:active {
+    transform: scale(0.85);
+}
+
+/* game over overlay */
+#game-over {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    color: #003059;
+    border: 4px solid #302f2e;
+    border-radius: 12px;
+    padding: 18px;
+    font-size: 1.2rem;
+    display: none;
+    z-index: 999;
+}
+
+#game-over-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+#game-over-screen.hidden {
+    display: none;
+}
+
+.game-over-card {
+    background: #ffe5a0;
+    border-radius: 25px;
+    padding: 30px 40px;
+    color: #6d3900;
+    font-family: inherit;
+    text-align: center;
+    border: 3px solid #6d3900;
+    box-shadow: 0 5px 0 #6d3900;
+}
+
+.game-over-card h2 {
+    margin: 0 0 10px;
+    font-size: 2.4em;
+}
+
+.game-over-card p {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+#restart-btn,
+.back-btn {
+    font-family: inherit;
+    display: inline-block;
+    background-color: #e4ac50;
+    color: #913d00;
+    padding: 10px 26px;
+    border-radius: 18px;
+    font-size: 1.3em;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 6px;
+    border: 2px solid #913d00;
+    box-shadow: 0 3px 0 #913d00;
+}
+
+#restart-btn:hover,
+.back-btn:hover {
+    background-color: #f7cf7a;
+    cursor: pointer;
+}
+
+#hud {
+    display: flex;
+    justify-content: space-between;
+    width: 400px;
+    margin-bottom: 10px;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #913d00;
+    background-color: #e4ac50;
+    border-radius: 16px;
+    padding: 10px 20px;
+    border: 3px solid #913d00;
+}
+
+#hearts img {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+}
+
+#game-score {
+    font-size: 26px;
+    user-select: none;
+}
