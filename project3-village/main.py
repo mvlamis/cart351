@@ -334,6 +334,11 @@ def games():
 def game_slime():
     return render_template('game_slime.html')
 
+@app.route('/games/matching')
+@login_required
+def matching_game():
+    return render_template('game_matching.html')
+
 # coins 
 @app.route('/api/user/coins', methods=['GET'])
 @login_required

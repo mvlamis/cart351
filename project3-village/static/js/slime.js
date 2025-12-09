@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const coinsTotalEl = document.getElementById('coins-total');
     const restartBtn = document.getElementById('restart-btn');
     const leaveBtn = document.getElementById('leave-btn');
+    const restartOverBtn = document.getElementById('restart-over-btn');
 
     let score = 0;
     let lives = 3;
@@ -163,8 +164,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("game-over-screen").classList.remove("hidden");
     }
 
-    restartBtn.addEventListener('click', startGame);
-    leaveBtn.addEventListener('click', () => { window.location.href = '/games'; });
+    // attach start handler to main restart button if present
+    if (restartBtn) restartBtn.addEventListener('click', startGame);
+    // attach start handler to game-over restart button if present
+    if (restartOverBtn) restartOverBtn.addEventListener('click', startGame);
+
+    // fetch user coins on load (moved inside DOMContentLoaded so coinsTotalEl is defined)
+    fetch('/api/user/coins', { credentials: 'same-origin' })
+        .then(r => r.json())
+        .then(data => {
+            if (data.coins !== undefined) {
+                coinsTotalEl.textContent = 'Coins: ' + data.coins;
+            } else {
+                coinsTotalEl.textContent = 'Coins: 0';
+            }
+        })
+        .catch(() => coinsTotalEl.textContent = 'Coins: —');
 });
 
 

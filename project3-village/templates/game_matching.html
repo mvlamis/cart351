@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Matching Cards | The Village{% endblock %}
+
+{% block content %}
+<div class="page-container" style="padding:40px; display:flex; flex-direction:column; align-items:center;">
+    <h2 class="game-title">Matching Mania</h2>
+    <div class="matching-container">
+        <div id="cards-grid" class="cards-grid"></div>
+    </div>
+
+    <div id="win-overlay" class="overlay hidden">
+        <div class="overlay-card">
+            <h2>Great! You matched them all!</h2>
+            <button id="win-restart" class="game-btn">Play Again</button>
+            <button id="win-exit" class="game-btn">Back to Games</button>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/matching.css') }}">
+
+    <script src="{{ url_for('static', filename='js/matching.js') }}"></script>
+</div>
+{% endblock %}

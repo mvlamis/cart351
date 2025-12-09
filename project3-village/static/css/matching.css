@@ -1,0 +1,82 @@
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 600px;
+    margin: 40px auto;
+}
+
+.card {
+    width: 100px;
+    height: 100px;
+    perspective: 600px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #219cc2;
+}
+
+
+.card-back {
+    background-color: #67d3d1;
+
+}
+
+
+.card-front {
+    transform: rotateY(180deg);
+    background-size: 60%;
+
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #a2dddc;
+
+}
+
+.hidden {
+    display: none !important;
+}
+
+
+.game-btn {
+    display: inline-block;
+    background-color: #e4ac50;
+    color: #913d00;
+    padding: 10px 26px;
+    border-radius: 18px;
+    font-size: 1.3em;
+    font-weight: 600;
+    text-decoration: none;
+    margin: 6px;
+    border: 2px solid #913d00;
+    box-shadow: 0 3px 0 #913d00;
+    font-family: futura-pt-condensed, sans-serif;
+}
+
+#restart-btn:hover,
+.game-btn:hover {
+    background-color: #f7cf7a;
+    cursor: pointer;
+}
